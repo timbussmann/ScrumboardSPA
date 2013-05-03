@@ -1,0 +1,19 @@
+﻿<div id="scrumboard" data-ng-controller="ScrumboardViewModel">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th data-ng-repeat="state in States" data-ng-style="{ width: (100 / States.length) + '%'}">{{state}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="story in Stories">
+                <td data-ng-repeat="state in States">
+                    <div class="story" data-ng-show="story.state == state">
+                        <h4>{{story.title}}</h4>
+                        <p>{{story.description}}</p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

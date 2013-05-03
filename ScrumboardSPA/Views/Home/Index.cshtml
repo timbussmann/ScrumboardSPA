@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Scrumboard SPA";
+}
+
+<h1>Welcome to the SPA. Enjoy!</h1>
+<div class="row" data-ng-app="appModule">
+    <div class="span12">
+        @RenderPage("../Views/ScrumboardView.cshtml")
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/angularJs")
+    @Scripts.Render("~/bundles/app")
+}

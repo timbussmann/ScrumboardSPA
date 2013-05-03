@@ -1,0 +1,14 @@
+﻿.container {
+    background-color: rgba(173, 216, 230, 0.2);
+}
+
+#scrumboard th {
+    text-align: center;
+}
+
+#scrumboard .story {
+    border: 1px solid black;
+    background-color: rgba(144, 238, 144, 0.51);
+    padding: 10px;
+    display: inline-table;
+}
