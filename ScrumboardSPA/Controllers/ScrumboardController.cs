@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-
-namespace ScrumboardSPA.Controllers
+﻿namespace ScrumboardSPA.Controllers
 {
-    using ScrumboardSPA.Models;
+    using System.Collections.Generic;
+    using System.Web.Http;
+    using Models;
 
     public class ScrumboardController : ApiController
     {
-        public IEnumerable<ScrumboardColumn> GetColumns()
+        public IEnumerable<StoryState> GetStates()
         {
             return new[]
                 {
-                    new ScrumboardColumn() {Name = "ToDo", Description = ""},
-                    new ScrumboardColumn() {Name = "WIP", Description = ""},
-                    new ScrumboardColumn() {Name = "To Verify", Description = ""},
-                    new ScrumboardColumn() {Name = "Done", Description = ""}
+                    new StoryState("Sprint Backlog"),
+                    new StoryState("WIP"), 
+                    new StoryState("To Verify"), 
+                    new StoryState("Done")
                 };
         }
     }

@@ -30,7 +30,8 @@ namespace ScrumboardSPA
 
             bundles.Add(new ScriptBundle("~/bundles/app")
                 .Include("~/App/appModule.js")
-                .IncludeDirectory("~/App/viewmodels", "*.js"));
+                .IncludeDirectory("~/App/viewmodels", "*.js")
+                .IncludeDirectory("~/App/services", "*.js"));
         }
     }
 }
