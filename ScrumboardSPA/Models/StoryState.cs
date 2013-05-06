@@ -1,12 +1,16 @@
 ﻿namespace ScrumboardSPA.Models
 {
-    public class StoryState
-    {
-        public StoryState(string name)
-        {
-            Name = name;
-        }
+    using System.ComponentModel;
 
-        public string Name { get; set; }
+    public enum StoryState
+    {
+        [Description("ToDo")]
+        Todo,
+        [Description("WIP")]
+        Wip,
+        [Description("To Verify")]
+        ToVerify,
+        [Description("Done")]
+        Done
     }
 }
