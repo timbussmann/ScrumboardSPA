@@ -35,19 +35,7 @@
             result.ShouldAllBeEquivalentTo(stories);
         }
 
-        [Test]
-        public void GetStory_WhenStoryExists_ThenReturnStory()
-        {
-            const int StoryId = 42;
-            this.SetupStories(new Story[]
-                                  {
-                                      new DoneStory(StoryId)
-                                  });
-
-            Story result = this.testee.GetStory(StoryId);
-
-            result.Id.Should().Be(StoryId);
-        }
+        
 
         private IEnumerable<Story> SetupStories(IEnumerable<Story> stories)
         {
