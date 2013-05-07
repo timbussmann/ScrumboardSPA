@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ScrumboardControllerTest.cs" />
+    <Compile Include="Controllers\StoriesControllerTest.cs" />
     <Compile Include="Controllers\StoryControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

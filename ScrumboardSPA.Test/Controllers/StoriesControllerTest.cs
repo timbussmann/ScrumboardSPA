@@ -8,18 +8,18 @@
     using ScrumboardSPA.Controllers;
 
     [TestFixture]
-    class ScrumboardControllerTest
+    class StoriesControllerTest
     {
         private IStoryRepository storyRepository;
 
-        private ScrumboardController testee;
+        private StoriesController testee;
 
         [SetUp]
         public void SetUp()
         {
             this.storyRepository = A.Fake<IStoryRepository>();
 
-            this.testee = new ScrumboardController(this.storyRepository);
+            this.testee = new StoriesController(this.storyRepository);
         }
 
         [Test]
@@ -34,8 +34,6 @@
 
             result.ShouldAllBeEquivalentTo(stories);
         }
-
-        
 
         private IEnumerable<Story> SetupStories(IEnumerable<Story> stories)
         {

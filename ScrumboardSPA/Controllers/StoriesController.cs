@@ -4,16 +4,16 @@
     using System.Web.Http;
     using Data.Story;
 
-    public class ScrumboardController : ApiController
+    public class StoriesController : ApiController
     {
         private readonly IStoryRepository storyRepository;
 
-        public ScrumboardController() : this(new StoryRepository())
+        public StoriesController() : this(new StoryRepository())
         {
             //TODO use ninject and remove this constructor!
         }
 
-        public ScrumboardController(IStoryRepository storyRepository)
+        public StoriesController(IStoryRepository storyRepository)
         {
             this.storyRepository = storyRepository;
         }
