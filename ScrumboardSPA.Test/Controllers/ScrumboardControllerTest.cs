@@ -25,16 +25,34 @@
         [Test]
         public void GetStories_ShouldReturnAllAvailableStories()
         {
-            IEnumerable<Story> stories = new Story[]
-                                             {
-                                                 new DoneStory()
-                                             };
-
-            A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
+            var stories = this.SetupStories(new Story[]
+                                           {
+                                               new DoneStory(33)
+                                           });
 
             IEnumerable<Story> result = this.testee.GetStories();
 
             result.ShouldAllBeEquivalentTo(stories);
+        }
+
+        [Test]
+        public void GetStory_WhenStoryExists_ThenReturnStory()
+        {
+            const int StoryId = 42;
+            this.SetupStories(new Story[]
+                                  {
+                                      new DoneStory(StoryId)
+                                  });
+
+            Story result = this.testee.GetStory(StoryId);
+
+            result.Id.Should().Be(StoryId);
+        }
+
+        private IEnumerable<Story> SetupStories(IEnumerable<Story> stories)
+        {
+            A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
+            return stories;
         }
     }
 }
