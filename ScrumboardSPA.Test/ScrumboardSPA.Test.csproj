@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\packages\FakeItEasy.1.11.0\lib\net40\FakeItEasy.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\packages\FluentAssertions.2.0.1\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
@@ -372,6 +375,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ScrumboardSPA.Data\ScrumboardSPA.Data.csproj">
+      <Project>{ce1ea092-e723-482f-834c-534d9902d073}</Project>
+      <Name>ScrumboardSPA.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScrumboardSPA\ScrumboardSPA.csproj">
       <Project>{b25e9f98-dacd-4255-adb3-bd91e8e09a68}</Project>
       <Name>ScrumboardSPA</Name>

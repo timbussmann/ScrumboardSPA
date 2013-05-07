@@ -1,30 +1,40 @@
 ﻿namespace ScrumboardSPA.Test.Controllers
 {
     using System.Collections.Generic;
+    using Data.Story;
+    using FakeItEasy;
     using FluentAssertions;
-    using Models;
     using NUnit.Framework;
     using ScrumboardSPA.Controllers;
 
     [TestFixture]
     class ScrumboardControllerTest
     {
+        private IStoryRepository storyRepository;
 
         private ScrumboardController testee;
 
         [SetUp]
         public void SetUp()
         {
-            this.testee = new ScrumboardController();
+            this.storyRepository = A.Fake<IStoryRepository>();
+
+            this.testee = new ScrumboardController(this.storyRepository);
         }
 
         [Test]
-        public void GetStates_ShouldReturnStateDescriptionString()
+        public void GetStories_ShouldReturnAllAvailableStories()
         {
-            IEnumerable<string> result = this.testee.GetStates();
+            IEnumerable<Story> stories = new Story[]
+                                             {
+                                                 new DoneStory()
+                                             };
 
-            result.Should().Contain(new[] {"ToDo", "WIP", "To Verify", "Done"});
-            result.Should().HaveCount(4);
+            A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
+
+            IEnumerable<Story> result = this.testee.GetStories();
+
+            result.ShouldAllBeEquivalentTo(stories);
         }
     }
 }
