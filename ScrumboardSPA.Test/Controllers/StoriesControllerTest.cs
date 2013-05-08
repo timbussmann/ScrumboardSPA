@@ -25,17 +25,17 @@
         [Test]
         public void GetStories_ShouldReturnAllAvailableStories()
         {
-            var stories = this.SetupStories(new Story[]
+            var stories = this.SetupStories(new UserStory[]
                                            {
-                                               new DoneStory(33)
+                                               new UserStory{Id = 33}
                                            });
 
-            IEnumerable<Story> result = this.testee.GetStories();
+            IEnumerable<UserStory> result = this.testee.GetStories();
 
             result.ShouldAllBeEquivalentTo(stories);
         }
 
-        private IEnumerable<Story> SetupStories(IEnumerable<Story> stories)
+        private IEnumerable<UserStory> SetupStories(IEnumerable<UserStory> stories)
         {
             A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
             return stories;

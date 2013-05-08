@@ -4,6 +4,6 @@ namespace ScrumboardSPA.Data.Story
 
     public interface IStoryRepository
     {
-        IEnumerable<Story> GetAllStories();
+        IEnumerable<UserStory> GetAllStories();
     }
 }

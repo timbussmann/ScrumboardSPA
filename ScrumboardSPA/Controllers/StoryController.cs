@@ -23,9 +23,10 @@ namespace ScrumboardSPA.Controllers
             this.storyRepository = storyRepository;
         }
 
-        public Story GetStory(int id)
+        [HttpGet]
+        public UserStory GetStory(int id)
         {
-            Story story = this.storyRepository.GetAllStories().SingleOrDefault(s => s.Id == id);
+            UserStory story = this.storyRepository.GetAllStories().SingleOrDefault(s => s.Id == id);
 
             if (story == null)
             {
@@ -33,6 +34,41 @@ namespace ScrumboardSPA.Controllers
             }
 
             return story;
+        }
+
+        [HttpPut]
+        [ActionName("state")]
+        public HttpResponseMessage SetState(int id, StoryState state)
+        {
+            // Aufruf via /api/story/{id}/state/{state}, konfiguriert via WebApiConfig.
+            // Alternative ist /api/story/{id}/state mit {state} im Http body -> benötigt keine eigene Route-config, daüfr [FromBody] Attribut beim Paramter
+
+            UserStory story = this.storyRepository.GetAllStories().SingleOrDefault(s => s.Id == id);
+
+            if (story == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            story.State = state;
+            return Request.CreateResponse(HttpStatusCode.OK, story);
+        }
+
+        [HttpGet]
+        [ActionName("test")]
+        public A GetTest()
+        {
+            return new B() {PropertyA = "A", PropertyB = "B"};
+        }
+
+        public class A
+        {
+            public string PropertyA { get; set; }
+        }
+
+        public class B : A
+        {
+            public string PropertyB { get; set; }
         }
     }
 }

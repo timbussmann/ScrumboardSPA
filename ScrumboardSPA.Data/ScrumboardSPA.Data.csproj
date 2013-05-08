@@ -39,13 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Story\DoneStory.cs" />
     <Compile Include="Story\IStoryRepository.cs" />
-    <Compile Include="Story\SprintBacklogStory.cs" />
-    <Compile Include="Story\Story.cs" />
+    <Compile Include="Story\StoryState.cs" />
     <Compile Include="Story\StoryRepository.cs" />
-    <Compile Include="Story\ToVerifyStory.cs" />
-    <Compile Include="Story\WorkInProgressStory.cs" />
+    <Compile Include="Story\UserStory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -18,7 +18,7 @@
             this.storyRepository = storyRepository;
         }
 
-        public IEnumerable<Story> GetStories()
+        public IEnumerable<UserStory> GetStories()
         {
             return this.storyRepository.GetAllStories();
         }
