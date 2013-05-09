@@ -2,12 +2,12 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th data-ng-repeat="state in model.States" data-ng-style="{ width: (100 / model.States.length) + '%'}">{{state.Name}}</th>
+                <th data-ng-repeat="state in States" data-ng-style="{ width: (100 / States.length) + '%'}">{{state.Name}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="story in model.Stories">
-                <td data-ng-repeat="state in model.States">
+            <tr data-ng-repeat="story in Stories">
+                <td data-ng-repeat="state in States">
                     <div class="story" data-ng-show="story.State == state.State">
                         <h4>{{story.Title}}</h4>
                         <p>{{story.Description}}</p>
