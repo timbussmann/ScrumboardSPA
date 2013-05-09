@@ -1,21 +1,11 @@
-﻿app.service('scrumboardService', function() {
+﻿app.service('scrumboardService', function ($http) {
 
     return {
-        getStates: function() {
-            return ['ToDo', 'WIP', 'To Verify', 'Done'];
+        getStates: function(callback) {
+            $http.get('/api/stories/states').success(callback);
         },
-        getStories: function () {
-            return [
-                new Story('Story1', 'Description for the first story.'),
-                new Story('Story2', 'Yet another story description', 'WIP'),
-                new Story('Story3', 'This is the description for story 3. This description is also very long and does not fit on a single line')
-            ];
+        getStories: function(callback) {
+            $http.get('/api/stories').success(callback);
         }
     };
-    
-    function Story(title, description, state) {
-        this.title = title;
-        this.description = description;
-        this.state = state || 'ToDo';
-    }
 });
