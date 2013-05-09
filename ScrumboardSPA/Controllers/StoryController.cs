@@ -53,22 +53,5 @@ namespace ScrumboardSPA.Controllers
             story.State = state;
             return Request.CreateResponse(HttpStatusCode.OK, story);
         }
-
-        [HttpGet]
-        [ActionName("test")]
-        public A GetTest()
-        {
-            return new B() {PropertyA = "A", PropertyB = "B"};
-        }
-
-        public class A
-        {
-            public string PropertyA { get; set; }
-        }
-
-        public class B : A
-        {
-            public string PropertyB { get; set; }
-        }
     }
 }
