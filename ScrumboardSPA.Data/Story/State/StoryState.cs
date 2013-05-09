@@ -1,4 +1,4 @@
-﻿namespace ScrumboardSPA.Data.Story
+﻿namespace ScrumboardSPA.Data.Story.State
 {
     public enum StoryState
     {

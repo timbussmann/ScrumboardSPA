@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace ScrumboardSPA.Data.Story
 {
+    using State;
+
     public class StoryRepository : IStoryRepository
     {
         public IEnumerable<UserStory> GetAllStories()

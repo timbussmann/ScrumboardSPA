@@ -40,7 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Story\IStoryRepository.cs" />
-    <Compile Include="Story\StoryState.cs" />
+    <Compile Include="Story\State\IStateDetailRepository.cs" />
+    <Compile Include="Story\State\StateDetail.cs" />
+    <Compile Include="Story\State\StateDetailRepository.cs" />
+    <Compile Include="Story\State\StoryState.cs" />
     <Compile Include="Story\StoryRepository.cs" />
     <Compile Include="Story\UserStory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

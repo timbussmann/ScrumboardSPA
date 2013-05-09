@@ -7,6 +7,11 @@
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
+                name: "Stories",
+                routeTemplate: "api/stories/{action}",
+                defaults: new {controller = "stories", action = "Default"});
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}/{action}",
                 defaults: new {id = RouteParameter.Optional, action = RouteParameter.Optional}

@@ -7,6 +7,7 @@
     using System.Web.Http.Hosting;
     using System.Web.Http.Routing;
     using Data.Story;
+    using Data.Story.State;
     using FakeItEasy;
     using FluentAssertions;
     using NUnit.Framework;

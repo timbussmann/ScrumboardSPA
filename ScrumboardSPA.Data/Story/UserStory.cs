@@ -1,5 +1,7 @@
 ﻿namespace ScrumboardSPA.Data.Story
 {
+    using State;
+
     public class UserStory
     {
         public int Id { get;  set; }
