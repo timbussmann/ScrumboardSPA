@@ -1,9 +1,13 @@
 ﻿.container {
-    background-color: rgba(173, 216, 230, 0.2);
+    /*background-color: rgba(173, 216, 230, 0.2);*/
 }
 
 #scrumboard th {
     text-align: center;
+}
+
+#scrumboard td {
+    border-width: 0 0 0 1px;
 }
 
 #scrumboard .story {
