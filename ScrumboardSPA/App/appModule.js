@@ -5,6 +5,11 @@
         controller: 'scrumboardViewModel'
     });
 
+    $routeProvider.when('/story/:storyId', {
+        templateUrl: '/views/StoryDetailView',
+        controller: 'storyDetailViewModel'
+    });
+
     $routeProvider.otherwise({redirectTo: '/scrumboard'});
 
     $locationProvider.html5Mode(true);

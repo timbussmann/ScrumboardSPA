@@ -6,6 +6,9 @@
         },
         getStories: function(callback) {
             $http.get('/api/stories').success(callback);
+        },
+        getStory: function(storyId, callback) {
+            $http.get('/api/story/' + storyId).success(callback);
         }
     };
 });
