@@ -2,7 +2,7 @@
     function($scope, scrumboardService, $routeParams) {
         var storyId = $routeParams.storyId;
 
-        scrumboardService.getStory(storyId, function(story) {
+        scrumboardService.getStory(storyId, function (story) {
             $scope.Story = story;
         });
 
