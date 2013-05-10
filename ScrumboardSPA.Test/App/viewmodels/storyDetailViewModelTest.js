@@ -13,6 +13,9 @@ describe('Story Detail Viewmodel', function () {
             }
         }
     };
+    var location = {
+        url: function (){}
+    };
 
     beforeEach(function () {
         module('appModule');
@@ -21,7 +24,8 @@ describe('Story Detail Viewmodel', function () {
             $controller('storyDetailViewModel', {
                 $scope: scope,
                 scrumboardService: scrumboardService,
-                $routeParams: {storyId: StoryId}
+                $routeParams: { storyId: StoryId },
+                $location: location
             });
         });
     });
@@ -34,5 +38,13 @@ describe('Story Detail Viewmodel', function () {
         scrumboardService.storyCallback(expectedStory);
 
         expect(scope.Story).toBe(expectedStory);
+    });
+
+    it('navigate to scrumboard on CloseDetailView', function() {
+        spyOn(location, 'url');
+
+        scope.CloseDetailView();
+
+        expect(location.url).toHaveBeenCalledWith('/scrumboard');
     });
 });

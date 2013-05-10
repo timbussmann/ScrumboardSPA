@@ -1,5 +1,37 @@
-﻿<div class="storyDetail">
-    <p>Your Story title is: {{Story.Title}}</p>
-    <p>{{Story.Description}}</p>
+﻿<div class="storyDetail span6">
+    <h3>Story #{{Story.Id}}</h3>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Title</label>
+            <div class="controls">
+                <input type="text" class="input-block-level" data-ng-model="Story.Title" disabled="disabled"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Description</label>
+            <div class="controls">
+                <textarea rows="5" class="input-block-level" disabled="disabled">{{Story.Description}}</textarea>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">State</label>
+            <div class="controls">
+                <select data-ng-model="Story.State" data-ng-options="s.State as s.Name for s in States" disabled="disabled"></select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Story Points</label>
+            <div class="controls">
+                <input type="text" class="uneditable-input input-block-level" value="{{Story.StoryPoints}}" disabled="disabled"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Stack Rank</label>
+            <div class="controls">
+                <input type="text" class="uneditable-input input-block-level" value="{{Story.StackRank}}" disabled="disabled"/>
+            </div>
+        </div>
+    </form>
+    <button class="btn" data-ng-click="CloseDetailView()">view Scrum board</button>
 </div>
 
