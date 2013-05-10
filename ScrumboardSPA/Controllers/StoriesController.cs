@@ -10,11 +10,6 @@
         private readonly IStoryRepository storyRepository;
         private readonly IStateDetailRepository stateDetailRepository;
 
-        public StoriesController() : this(new StoryRepository(), new StateDetailRepository())
-        {
-            //TODO use ninject and remove this constructor!
-        }
-
         public StoriesController(IStoryRepository storyRepository, IStateDetailRepository stateDetailRepository)
         {
             this.storyRepository = storyRepository;

@@ -14,11 +14,6 @@ namespace ScrumboardSPA.Controllers
     {
         private readonly IStoryRepository storyRepository;
 
-        public StoryController() : this(new StoryRepository())
-        {
-            //TODO use ninject and remove this constructor!
-        }
-
         public StoryController(IStoryRepository storyRepository)
         {
             this.storyRepository = storyRepository;
