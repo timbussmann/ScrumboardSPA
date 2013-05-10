@@ -15,11 +15,15 @@ describe('Scrumboard Viewmodel', function () {
         }
     };
 
+    var location = {
+        url: function() {}
+    };
+
     beforeEach(function() {
         module('appModule');
         inject(function($rootScope, $controller) {
             scope = $rootScope.$new();
-            $controller('scrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService });
+            $controller('scrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService, $location: location});
         });
     });
 
@@ -38,6 +42,15 @@ describe('Scrumboard Viewmodel', function () {
         angular.forEach(stories, function(story) {
             expect(scope.Stories).toContain(story);
         });
+    });
+
+    it('should navigate to story detail page when ShowStoryDetail clicked', function () {
+        var storyId = 11;
+        spyOn(location, 'url');
+        
+        scope.ShowStoryDetail(storyId);
+
+        expect(location.url).toHaveBeenCalledWith('/story/' + storyId);
     });
 });
 

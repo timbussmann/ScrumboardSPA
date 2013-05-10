@@ -1,9 +1,15 @@
-﻿app.controller('scrumboardViewModel', ['$scope', 'scrumboardService', function($scope, scrumboardService) {
+﻿app.controller('scrumboardViewModel',
+    ['$scope', 'scrumboardService', '$location',
+        function($scope, scrumboardService, $location) {
 
-    scrumboardService.getStates(function (states) {
-        $scope.States = states;
-    });
-    scrumboardService.getStories(function(stories) {
-        $scope.Stories = stories;
-    });
-}]);
+            scrumboardService.getStates(function(states) {
+                $scope.States = states;
+            });
+            scrumboardService.getStories(function(stories) {
+                $scope.Stories = stories;
+            });
+
+            $scope.ShowStoryDetail = function(storyId) {
+                $location.url('/story/' + storyId);
+            };
+        }]);

@@ -8,7 +8,9 @@
         <tbody>
             <tr data-ng-repeat="story in Stories">
                 <td data-ng-repeat="state in States">
-                    <div class="story" data-ng-show="story.State == state.State">
+                    <div class="story" 
+                         data-ng-show="story.State == state.State"
+                         data-ng-click="ShowStoryDetail(story.Id)">
                         <h4>{{story.Title}}</h4>
                         <p>{{story.Description}}</p>
                     </div>

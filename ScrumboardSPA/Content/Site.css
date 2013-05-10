@@ -11,4 +11,9 @@
     background-color: rgba(144, 238, 144, 0.51);
     padding: 10px;
     display: inline-table;
+    cursor: pointer;
+}
+
+#scrumboard .story:hover {
+    background-color: rgba(144, 238, 144, 1.0);
 }
