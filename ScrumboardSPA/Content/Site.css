@@ -21,3 +21,7 @@
 #scrumboard .story:hover {
     background-color: rgba(144, 238, 144, 1.0);
 }
+
+#scrumboard .dropzoneDragOver {
+    background-color: red;
+}
