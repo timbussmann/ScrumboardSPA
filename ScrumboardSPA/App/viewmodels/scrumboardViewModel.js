@@ -1,4 +1,4 @@
-﻿app.controller('ScrumboardViewModel', ['$scope', 'scrumboardService', function($scope, scrumboardService) {
+﻿app.controller('scrumboardViewModel', ['$scope', 'scrumboardService', function($scope, scrumboardService) {
 
     scrumboardService.getStates(function (states) {
         $scope.States = states;

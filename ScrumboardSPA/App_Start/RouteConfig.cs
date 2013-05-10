@@ -14,10 +14,14 @@ namespace ScrumboardSPA
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Views",
+                url: "views/{viewName}",
+                defaults: new {controller = "Home", action = "GetView"});
+
+            routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            );
+                url: "{*url}",
+                defaults: new { controller = "Home", action = "Index"});
         }
     }
 }

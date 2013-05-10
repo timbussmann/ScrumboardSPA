@@ -7,13 +7,11 @@ describe('Scrumboard Viewmodel', function () {
 
     var scope;
     var scrumboardService = {
-        states: [], // reference to the return value of getStates
-        stories: [], // reference to the return value of getStories
-        getStates: function() {
-            return this.states;
+        getStates: function(callback) {
+            this.statesCallback = callback;
         },
-        getStories: function () {
-            return this.stories;
+        getStories: function (callback) {
+            this.storiesCallback = callback;
         }
     };
 
@@ -21,25 +19,23 @@ describe('Scrumboard Viewmodel', function () {
         module('appModule');
         inject(function($rootScope, $controller) {
             scope = $rootScope.$new();
-            $controller('ScrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService });
+            $controller('scrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService });
         });
     });
 
     it('should show states from scrumboard service', function () {
-        scrumboardService.states.push('state1');
-        scrumboardService.states.push('state2');
+        scrumboardService.statesCallback(['state1', 'state2']);
         
         expect(scope.States.length).toBe(2);
-        expect(scope.States[1]).toBe(scrumboardService.states[1]);
+        expect(scope.States[1]).toBe('state2');
     });
 
     it('should show all retrieved stories', function() {
-        scrumboardService.stories.push('story1');
-        scrumboardService.stories.push('story2');
-        scrumboardService.stories.push('story3');
+        var stories = ['story1', 'story2', 'story3'];
+        scrumboardService.storiesCallback(stories);
 
         expect(scope.Stories.length).toBe(3);
-        angular.forEach(scrumboardService.stories, function(story) {
+        angular.forEach(stories, function(story) {
             expect(scope.Stories).toContain(story);
         });
     });

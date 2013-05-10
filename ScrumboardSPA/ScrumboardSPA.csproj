@@ -480,7 +480,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Views\ScrumboardView.cshtml" />
+    <Content Include="Views\Shared\ScrumboardView.cshtml" />
+    <Content Include="Views\Shared\StoryDetailView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
