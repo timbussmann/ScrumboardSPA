@@ -28,10 +28,10 @@ app.directive('dropzone', function () {
         }, false);
 
         element.addEventListener('dragenter', function(e) {
-            element.classList.add('dropzoneDragOver');
+            //element.classList.add('dropzoneDragOver');
         }, false);
         element.addEventListener('dragleave', function(e) {
-            element.classList.remove('dropzoneDragOver');
+            //element.classList.remove('dropzoneDragOver');
         }, false);
         element.addEventListener('drop', function(e) {
             var rawData = e.dataTransfer.getData('application/json');
@@ -46,7 +46,7 @@ app.directive('dropData', function() {
         var element = elements[0];
 
         element.addEventListener('dragstart', function(e) {
-            e.dataTransfer.effectAllowed = 'move';
+            //e.dataTransfer.effectAllowed = 'move';
             var transferData = JSON.stringify(scope[attrs['dropData']]);
             e.dataTransfer.setData('application/json', transferData);
         });

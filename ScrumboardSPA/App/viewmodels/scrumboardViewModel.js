@@ -14,6 +14,11 @@
             };
 
             $scope.UpdateStoryState = function(story, newState) {
-                scrumboardService.setStoryState(story.Id, newState.State);
+                scrumboardService.setStoryState(story.Id, newState.State, function (updatedStory) {
+                    // replace the current story in on the scope with the updated one
+                    var originalStory = _.findWhere($scope.Stories, { Id: story.Id });
+                    var storyIndex = _.indexOf($scope.Stories, originalStory);
+                    $scope.Stories[storyIndex] = updatedStory;
+                });
             };
         }]);
