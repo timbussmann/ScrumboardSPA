@@ -12,4 +12,8 @@
             $scope.ShowStoryDetail = function(storyId) {
                 $location.url('/story/' + storyId);
             };
+
+            $scope.UpdateStoryState = function(story, newState) {
+                scrumboardService.setStoryState(story.Id, newState.State);
+            };
         }]);

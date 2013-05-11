@@ -16,8 +16,10 @@
 });
 
 app.directive('dropzone', function () {
-    return function (scope, element, attrs) {
-        element[0].addEventListener('dragover', function(e) {
+    return function (scope, elements, attrs) {
+        var element = elements[0];
+        
+        element.addEventListener('dragover', function(e) {
             e.preventDefault && e.preventDefault();
 
             e.dataTransfer.dropEffect = 'move';
@@ -25,11 +27,28 @@ app.directive('dropzone', function () {
             return false;
         }, false);
 
-        element[0].addEventListener('dragenter', function(e) {
-            element[0].classList.add('dropzoneDragOver');
+        element.addEventListener('dragenter', function(e) {
+            element.classList.add('dropzoneDragOver');
         }, false);
-        element[0].addEventListener('dragleave', function(e) {
-            this.classList.remove('dropzoneDragOver');
+        element.addEventListener('dragleave', function(e) {
+            element.classList.remove('dropzoneDragOver');
         }, false);
+        element.addEventListener('drop', function(e) {
+            var rawData = e.dataTransfer.getData('application/json');
+            var transferData = JSON.parse(rawData);
+            scope[attrs['dropzone']](transferData, scope[attrs['dropzoneParameter']]);
+        }, false);
+    };
+});
+
+app.directive('dropData', function() {
+    return function(scope, elements, attrs) {
+        var element = elements[0];
+
+        element.addEventListener('dragstart', function(e) {
+            e.dataTransfer.effectAllowed = 'move';
+            var transferData = JSON.stringify(scope[attrs['dropData']]);
+            e.dataTransfer.setData('application/json', transferData);
+        });
     };
 });
