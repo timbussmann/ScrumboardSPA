@@ -2,6 +2,21 @@
     ['$scope', 'scrumboardService', '$location',
         function($scope, scrumboardService, $location) {
 
+            // Proxy created on the fly          
+            var hub = $.connection.storyHub;
+
+            // Declare a function on the chat hub so the server can invoke it          
+            hub.client.updateStory = function (updatedStory) {
+                var originalStory = _.findWhere($scope.Stories, { Id: updatedStory.Id });
+                var storyIndex = _.indexOf($scope.Stories, originalStory);
+                $scope.Stories[storyIndex] = updatedStory;
+                $scope.$apply();
+            };
+
+            // Start the connection
+            $.connection.hub.start();
+
+
             scrumboardService.getStates(function(states) {
                 $scope.States = states;
             });
@@ -19,6 +34,7 @@
                     var originalStory = _.findWhere($scope.Stories, { Id: story.Id });
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
                     $scope.Stories[storyIndex] = updatedStory;
+                    hub.server.updateStory(updatedStory);
                 });
             };
         }]);

@@ -10,6 +10,8 @@ namespace ScrumboardSPA.Controllers
     using Data.Story;
     using Data.Story.State;
 
+    using Microsoft.AspNet.SignalR;
+
     public class StoryController : ApiController
     {
         private readonly IStoryRepository storyRepository;
@@ -47,6 +49,8 @@ namespace ScrumboardSPA.Controllers
             }
 
             story.State = state;
+            //var context = GlobalHost.ConnectionManager.GetHubContext<StoryHub>();
+            //context.Clients.All.updateStory(story);
             return Request.CreateResponse(HttpStatusCode.OK, story);
         }
     }
