@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-
-namespace ScrumboardSPA.Controllers
+﻿namespace ScrumboardSPA.Controllers
 {
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Web.Http;
     using Data.Story;
     using Data.Story.State;
 
@@ -49,5 +46,30 @@ namespace ScrumboardSPA.Controllers
             story.State = state;
             return Request.CreateResponse(HttpStatusCode.OK, story);
         }
+
+        [HttpPost]
+        public HttpResponseMessage CreateStory(NewUserStory newStory)
+        {
+            var story = new UserStory
+                                  {
+                                      Title = newStory.Title,
+                                      Description = newStory.Description,
+                                      StackRank = newStory.StackRank ?? 0,
+                                      StoryPoints = newStory.StoryPoints,
+                                      State = newStory.State ?? StoryState.SprintBacklog
+                                  };
+
+            this.storyRepository.AddNewStory(story);
+            return Request.CreateResponse(HttpStatusCode.Created, story);
+        }
+    }
+
+    public class NewUserStory
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public int? StackRank { get; set; }
+        public int StoryPoints { get; set; }
+        public StoryState? State { get; set; }
     }
 }
