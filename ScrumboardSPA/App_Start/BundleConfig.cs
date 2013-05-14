@@ -19,11 +19,13 @@ namespace ScrumboardSPA
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/bootstrap.css")
                 .Include("~/Content/bootstrap-responsive.css")
+                .Include("~/Content/toastr.css")
                 .Include("~/Content/site.css"));
             
             bundles.Add(new ScriptBundle("~/bundles/3rdParty")
                 .Include("~/Scripts/bootstrap.js")
-                .Include("~/Scripts/underscore.js"));
+                .Include("~/Scripts/underscore.js")
+                .Include("~/Scripts/toastr.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angularJs")
                 .Include("~/Scripts/angular.js"));
