@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.AspNet.SignalR;
-
-namespace ScrumboardSPA
+﻿namespace ScrumboardSPA
 {
-    using ScrumboardSPA.Data.Story;
+    using Microsoft.AspNet.SignalR;
 
     public class StoryHub : Hub
     {
         public void UpdateStory(UserStoryWithString story)
         {
-
             Clients.Others.updateStory(story);
         }
 

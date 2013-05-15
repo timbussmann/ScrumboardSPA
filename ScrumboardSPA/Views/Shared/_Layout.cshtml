@@ -14,8 +14,8 @@
         </div>
 
         @Scripts.Render("~/bundles/jquery")
-        <script src="~/Scripts/jquery.signalR-1.0.1.js"></script>
-    <script src="~/signalr/hubs"></script>
+        @Scripts.Render("~/bundles/signalR")
+        <script src="~/signalr/hubs"></script>
         @Scripts.Render("~/bundles/3rdParty")
         @RenderSection("scripts", required: false)
     </body>

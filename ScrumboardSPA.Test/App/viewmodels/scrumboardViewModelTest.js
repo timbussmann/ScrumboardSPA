@@ -5,6 +5,8 @@
 /// <reference path="../../../scrumboardspa/app/viewmodels/scrumboardviewmodel.js" />
 describe('Scrumboard Viewmodel', function () {
 
+    $ = { connection: { storyHub: { client: {} }, hub:{start: function() {}} } };
+    
     var scope;
     var scrumboardService = {
         getStates: function(callback) {
@@ -23,7 +25,7 @@ describe('Scrumboard Viewmodel', function () {
         module('appModule');
         inject(function($rootScope, $controller) {
             scope = $rootScope.$new();
-            $controller('scrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService, $location: location});
+            $controller('scrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService, $location: location });
         });
     });
 
@@ -51,6 +53,19 @@ describe('Scrumboard Viewmodel', function () {
         scope.ShowStoryDetail(storyId);
 
         expect(location.url).toHaveBeenCalledWith('/story/' + storyId);
+    });
+
+    it('should update story when updateStory is called on hub', function () {
+        var oldStory = { Id: 1, Title: 'old' };
+        var newStory = { Id: 1, Title: 'new' };
+        scope.Stories = [oldStory];
+        _ = {
+            findWhere: function () { return oldStory; },
+            indexOf: function () { return 0; }
+        };
+        $.connection.storyHub.client.updateStory(newStory);
+
+        expect(scope.Stories[0]).toBe(newStory);
     });
 });
 
