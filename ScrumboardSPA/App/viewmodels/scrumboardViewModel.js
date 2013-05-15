@@ -28,12 +28,18 @@
                 $location.url('/story/' + storyId);
             };
 
-            $scope.UpdateStoryState = function(story, newState) {
+            $scope.UpdateStoryState = function (story, newState) {
+                // don't update story if the state hasn't changed.
+                if (story.State === newState.State) {
+                    return;
+                }
+
                 scrumboardService.setStoryState(story.Id, newState.State, function (updatedStory) {
                     // replace the current story in on the scope with the updated one
                     var originalStory = _.findWhere($scope.Stories, { Id: story.Id });
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
                     $scope.Stories[storyIndex] = updatedStory;
+                    toastr.success('Moved story to "' + newState.Name + '"');
                     hub.server.updateStory(updatedStory);
                 });
             };
