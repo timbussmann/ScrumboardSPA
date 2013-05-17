@@ -7,10 +7,14 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="story in Stories">
-                <td data-ng-repeat="state in States">
+                <td data-ng-repeat="state in States" 
+                    data-dropzone="UpdateStoryState"
+                    data-dropzone-parameter="state">
                     <div class="story" 
                          data-ng-show="story.State == state.State"
-                         data-ng-click="ShowStoryDetail(story.Id)">
+                         data-ng-click="ShowStoryDetail(story.Id)"
+                         data-drop-data="story"
+                         draggable="true">
                         <h4>{{story.Title}}</h4>
                         <p>{{story.Description}}</p>
                     </div>

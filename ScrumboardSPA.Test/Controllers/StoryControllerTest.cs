@@ -75,6 +75,19 @@
             story.State.Should().Be(StoryState.WorkInProgress);
         }
 
+        [Test]
+        public void CreateStory_ShouldCreateNewStory()
+        {
+            UserStory expectedUserStory = new UserStory();
+            A.CallTo(() => this.storyRepository.AddNewStory(A<UserStory>._)).Returns(expectedUserStory);
+
+            HttpResponseMessage result = this.testee.CreateStory(new NewUserStory());
+
+            result.StatusCode.Should().Be(HttpStatusCode.Created);
+            UserStory createdStory = (UserStory) result.Content.As<ObjectContent>().Value;
+            createdStory.ShouldHave().AllProperties().EqualTo(expectedUserStory);
+        }
+
         private IEnumerable<UserStory> SetupStories(IEnumerable<UserStory> stories)
         {
             A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
