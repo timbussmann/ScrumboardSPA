@@ -14,6 +14,11 @@
         },
         setStoryState: function (storyId, state, callback) {
             $http.put('/api/story/' + storyId + '/state/' + state).success(callback);
+        },
+        createStory: function(story, successCallback, errorCallback) {
+            $http.post('/api/story', story)
+                .success(successCallback)
+                .error(errorCallback);
         }
     };
 });

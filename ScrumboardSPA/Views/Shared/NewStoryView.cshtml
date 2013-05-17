@@ -1,0 +1,37 @@
+﻿<div id="newStoryView" class="span6">
+    <h3>Create new User Story:</h3>
+    <div class="alert alert-error" data-ng-Show="ServerError">
+        <h4>Error:</h4>
+        {{ServerError.Message}}
+    </div>
+    <form class="form-horizontal" name="newStoryForm">
+        <div class="control-group" data-ng-class="{error: ShowErrors == true && !newStoryForm.storyTitle.$valid}">
+            <label class="control-label">Title</label>
+            <div class="controls">
+                <input type="text" name="storyTitle" class="input-block-level" 
+                       data-ng-model="Story.Title" 
+                       required />
+                <span class="help-inline" data-ng-show="newStoryForm.storyTitle.$error.required">* required</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Description</label>
+            <div class="controls">
+                <textarea rows="5" class="input-block-level" data-ng-model="Story.Description"></textarea>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Story Points</label>
+            <div class="controls">
+                <input type="number" name="storyPoints" class="input-block-level" data-ng-model="Story.StoryPoints"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Stack Rank</label>
+            <div class="controls">
+                <input type="number" class="input-block-level" data-ng-model="Story.StackRank"/>
+            </div>
+        </div>
+    </form>
+    <button class="btn" type="submit" data-ng-click="CreateStory()">Create story</button>
+</div>

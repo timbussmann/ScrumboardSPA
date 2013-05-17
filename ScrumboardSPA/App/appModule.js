@@ -5,6 +5,11 @@
         controller: 'scrumboardViewModel'
     });
 
+    $routeProvider.when('/story/new', {
+        templateUrl: '/views/NewStoryView',
+        controller: 'newStoryViewModel'
+    });
+
     $routeProvider.when('/story/:storyId', {
         templateUrl: '/views/StoryDetailView',
         controller: 'storyDetailViewModel'

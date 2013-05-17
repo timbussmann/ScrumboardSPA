@@ -50,12 +50,17 @@
         [HttpPost]
         public HttpResponseMessage CreateStory(NewUserStory newStory)
         {
+            if (newStory == null || string.IsNullOrWhiteSpace(newStory.Title))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Story title is required");
+            }
+
             var story = new UserStory
                                   {
                                       Title = newStory.Title,
                                       Description = newStory.Description,
                                       StackRank = newStory.StackRank ?? 0,
-                                      StoryPoints = newStory.StoryPoints,
+                                      StoryPoints = newStory.StoryPoints ?? 0,
                                       State = newStory.State ?? StoryState.SprintBacklog
                                   };
 
@@ -69,7 +74,7 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public int? StackRank { get; set; }
-        public int StoryPoints { get; set; }
+        public int? StoryPoints { get; set; }
         public StoryState? State { get; set; }
     }
 }

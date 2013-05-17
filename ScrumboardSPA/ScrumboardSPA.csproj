@@ -150,6 +150,7 @@
   <ItemGroup>
     <Content Include="App\appModule.js" />
     <Content Include="App\services\scrumboardService.js" />
+    <Content Include="App\viewmodels\newStoryViewModel.js" />
     <Content Include="App\viewmodels\scrumboardViewModel.js" />
     <Content Include="App\viewmodels\storyDetailViewModel.js" />
     <Content Include="Content\bootstrap-responsive.css" />
@@ -499,6 +500,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\ScrumboardView.cshtml" />
     <Content Include="Views\Shared\StoryDetailView.cshtml" />
+    <Content Include="Views\Shared\NewStoryView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

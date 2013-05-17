@@ -23,6 +23,8 @@ describe('Scrumboard Viewmodel', function () {
     var location = {
         url: function() {}
     };
+    
+    toastr = { success: function () { } };
 
     beforeEach(function() {
         module('appModule');

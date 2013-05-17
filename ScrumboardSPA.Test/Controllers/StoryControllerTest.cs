@@ -78,14 +78,27 @@
         [Test]
         public void CreateStory_ShouldCreateNewStory()
         {
-            UserStory expectedUserStory = new UserStory();
+            UserStory expectedUserStory = new UserStory(){Title = "My Title"};
             A.CallTo(() => this.storyRepository.AddNewStory(A<UserStory>._)).Returns(expectedUserStory);
 
-            HttpResponseMessage result = this.testee.CreateStory(new NewUserStory());
+            HttpResponseMessage result = this.testee.CreateStory(new NewUserStory
+                {
+                    Title = "My Title"
+                });
 
             result.StatusCode.Should().Be(HttpStatusCode.Created);
             UserStory createdStory = (UserStory) result.Content.As<ObjectContent>().Value;
             createdStory.ShouldHave().AllProperties().EqualTo(expectedUserStory);
+        }
+
+        [Test]
+        public void CreateStory_WhenNoTitleProvided_ThenDoNotCreateStoryAndReturnError()
+        {
+            HttpResponseMessage result = this.testee.CreateStory(new NewUserStory());
+
+            result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+           
+            A.CallTo(() => this.storyRepository.AddNewStory(A<UserStory>._)).MustNotHaveHappened();
         }
 
         private IEnumerable<UserStory> SetupStories(IEnumerable<UserStory> stories)
