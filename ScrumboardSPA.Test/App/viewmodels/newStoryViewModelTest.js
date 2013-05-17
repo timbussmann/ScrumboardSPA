@@ -16,7 +16,9 @@ describe('new Story Viewmodel', function () {
         url: function () { }
     };
 
-    toastr = { success: function() {}};
+    var notificationService = {
+        notifySuccess: function () { }
+    };
 
     beforeEach(function () {
         module('appModule');
@@ -25,7 +27,8 @@ describe('new Story Viewmodel', function () {
             $controller('newStoryViewModel', {
                 $scope: scope,
                 scrumboardService: scrumboardService,
-                $location: location
+                $location: location,
+                notificationService: notificationService
             });
         });
     });
@@ -56,6 +59,7 @@ describe('new Story Viewmodel', function () {
 
     it('should navigate to scrumboard on successful creation', function () {
         spyOn(location, 'url');
+        spyOn(notificationService, 'notifySuccess');
         scope.newStoryForm = { $invalid: false };
         var expectedStory = { Title: 'MyNewStory' };
         scope.Story = expectedStory;
@@ -64,5 +68,6 @@ describe('new Story Viewmodel', function () {
         scrumboardService.createStorySuccessCallback({});
 
         expect(location.url).toHaveBeenCalledWith('/scrumboard');
+        expect(notificationService.notifySuccess).toHaveBeenCalled();
     });
 });

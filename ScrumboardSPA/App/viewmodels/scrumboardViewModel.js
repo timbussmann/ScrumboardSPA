@@ -1,6 +1,6 @@
 ﻿app.controller('scrumboardViewModel',
-    ['$scope', 'scrumboardService', '$location',
-        function($scope, scrumboardService, $location) {
+    ['$scope', 'scrumboardService', '$location', 'notificationService',
+        function($scope, scrumboardService, $location, notificationService) {
 
             scrumboardService.getStates(function(states) {
                 $scope.States = states;
@@ -24,7 +24,7 @@
                     var originalStory = _.findWhere($scope.Stories, { Id: story.Id });
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
                     $scope.Stories[storyIndex] = updatedStory;
-                    toastr.success('Moved story to "' + newState.Name + '"');
+                    notificationService.notifySuccess('Moved story to "' + newState.Name + '"');
                 });
             };
         }]);

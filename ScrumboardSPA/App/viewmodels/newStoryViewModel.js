@@ -1,6 +1,6 @@
 ﻿app.controller('newStoryViewModel',
-    ['$scope', 'scrumboardService', '$location',
-        function ($scope, scrumboardService, $location) {
+    ['$scope', 'scrumboardService', '$location', 'notificationService',
+        function ($scope, scrumboardService, $location, notificationService) {
 
             $scope.Story = {};
             $scope.ShowErrors = false;
@@ -14,7 +14,7 @@
                     var story = $scope.Story;
                     $scope.Story = {};
                     scrumboardService.createStory(story, function (createdStory) {
-                        toastr.success(createdStory.Title + ' - <a href="/story/' + createdStory.Id + '">[click to see story]</a>', 'New Story created');
+                        notificationService.notifySuccess(createdStory.Title + ' - <a href="/story/' + createdStory.Id + '">[click to see story]</a>', 'New Story created');
                         $location.url('/scrumboard');
                     }, function (error) {
                         $scope.ServerError = error;
