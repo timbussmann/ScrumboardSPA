@@ -2,6 +2,7 @@
 /// <reference path="../../scripts/angular.js" />
 /// <reference path="../../scripts/angular-mocks.js" />
 /// <reference path="../../../scrumboardspa/app/appmodule.js" />
+/// <reference path="../../../scrumboardspa/scripts/underscore.js" />
 /// <reference path="../../../scrumboardspa/app/viewmodels/scrumboardviewmodel.js" />
 describe('Scrumboard Viewmodel', function () {
 
@@ -12,6 +13,10 @@ describe('Scrumboard Viewmodel', function () {
         },
         getStories: function (callback) {
             this.storiesCallback = callback;
+        },
+        setStoryState: function(storyId, newState, callback) {
+            this.setStoryStateCallback = callback;
+            this.setStoryStateParameter = { StoryId: storyId, NewState: newState };
         }
     };
 
@@ -51,6 +56,18 @@ describe('Scrumboard Viewmodel', function () {
         scope.ShowStoryDetail(storyId);
 
         expect(location.url).toHaveBeenCalledWith('/story/' + storyId);
+    });
+
+    it('should set story state when UpdateStoryState called', function () {
+        var stories = [{ Title: 'story1', State: 'done', Id: 42 }];
+        scrumboardService.storiesCallback(stories);
+
+        scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
+
+        scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
+        expect(scope.Stories[0].State).toBe('TestState');
+        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0].Id);
+        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
     });
 });
 
