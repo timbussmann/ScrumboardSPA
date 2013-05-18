@@ -12,8 +12,11 @@
         getStory: function(storyId, callback) {
             $http.get('/api/story/' + storyId).success(callback);
         },
-        setStoryState: function (storyId, state, callback) {
-            $http.put('/api/story/' + storyId + '/state/' + state).success(callback);
+        setStoryState: function (story, state, successCallback, errorCallback) {
+            $http.put('/api/story/' + story.Id + '/state/' + state,
+                '"' + story.Etag + '"') // WebAPI requires single primitive datatypes as a string and not as json object
+                .success(successCallback)
+                .error(errorCallback);
         },
         createStory: function(story, successCallback, errorCallback) {
             $http.post('/api/story', story)

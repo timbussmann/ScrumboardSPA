@@ -74,10 +74,10 @@ describe('Scrumboard Viewmodel', function () {
 
         scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
 
+        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
+        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
         scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
         expect(scope.Stories[0].State).toBe('TestState');
-        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0].Id);
-        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
         expect(notificationService.notifySuccess).toHaveBeenCalled();
     });
 });

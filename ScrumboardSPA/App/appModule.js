@@ -22,6 +22,7 @@
     $locationProvider.html5Mode(true);
 });
 
+
 // This directive allows to define a html5 drag & drop dropzone
 // It will call the specified method on the current scope.
 // Use the dropzone-parameter directive to add additional parameters from the

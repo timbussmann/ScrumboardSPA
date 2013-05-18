@@ -11,6 +11,8 @@ describe('Story Detail Viewmodel', function () {
             if (storyId == StoryId) {
                 this.storyCallback = callback;
             }
+        },
+        getStates: function() {
         }
     };
     var location = {

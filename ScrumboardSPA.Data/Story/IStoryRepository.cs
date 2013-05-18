@@ -6,6 +6,10 @@ namespace ScrumboardSPA.Data.Story
     {
         IEnumerable<UserStory> GetAllStories();
 
-        UserStory AddNewStory(UserStory story);
+        UserStory AddNewStory(NewUserStory newStory);
+
+        UserStory UpdateStory(UserStory story);
+
+        UserStory GetStory(int id);
     }
 }
