@@ -1,4 +1,5 @@
 ﻿<div id="scrumboard">
+    <input type="text" placeholder="filter by story title" data-ng-model="storyFilter.Title"/>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -6,7 +7,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="story in Stories">
+            <tr data-ng-repeat="story in (Stories | filter: storyFilter)">
                 <td data-ng-repeat="state in States" 
                     data-dropzone="UpdateStoryState"
                     data-dropzone-parameter="state">
