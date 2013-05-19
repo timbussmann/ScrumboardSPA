@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Controllers\StoriesControllerTest.cs" />
     <Compile Include="Controllers\StoryControllerTest.cs" />
+    <Compile Include="Model\StoryRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +63,7 @@
       <Link>phantomjs.exe</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App\viewmodels\newStoryViewModelTest.js" />
     <Content Include="App\viewmodels\scrumboardViewModelTest.js" />
     <Content Include="App\viewmodels\storyDetailViewModelTest.js" />
     <Content Include="css\jasmine.css" />

@@ -26,11 +26,20 @@ describe('Scrumboard Viewmodel', function () {
         url: function() {}
     };
 
+    var notificationService = {
+        notifySuccess: function () { }
+    };
+
     beforeEach(function() {
         module('appModule');
         inject(function($rootScope, $controller) {
             scope = $rootScope.$new();
-            $controller('scrumboardViewModel', { $scope: scope, scrumboardService: scrumboardService, $location: location });
+            $controller('scrumboardViewModel', {
+                $scope: scope,
+                scrumboardService: scrumboardService,
+                $location: location,
+                notificationService: notificationService
+            });
         });
     });
 
@@ -74,15 +83,17 @@ describe('Scrumboard Viewmodel', function () {
     });
 
     it('should set story state when UpdateStoryState called', function () {
+        spyOn(notificationService, 'notifySuccess');
         var stories = [{ Title: 'story1', State: 'done', Id: 42 }];
         scrumboardService.storiesCallback(stories);
 
         scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
 
+        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
+        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
         scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
         expect(scope.Stories[0].State).toBe('TestState');
-        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0].Id);
-        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
+        expect(notificationService.notifySuccess).toHaveBeenCalled();
     });
 });
 

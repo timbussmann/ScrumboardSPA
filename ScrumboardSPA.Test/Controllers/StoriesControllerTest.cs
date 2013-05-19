@@ -29,9 +29,9 @@
         [Test]
         public void GetStories_ShouldReturnAllAvailableStories()
         {
-            var stories = this.SetupStories(new UserStory[]
+            var stories = this.SetupStories(new[]
                                            {
-                                               new UserStory{Id = 33}
+                                               new UserStory(33)
                                            });
 
             IEnumerable<UserStory> result = this.testee.GetStories();

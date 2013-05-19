@@ -5,6 +5,11 @@
         controller: 'scrumboardViewModel'
     });
 
+    $routeProvider.when('/story/new', {
+        templateUrl: '/views/NewStoryView',
+        controller: 'newStoryViewModel'
+    });
+
     $routeProvider.when('/story/:storyId', {
         templateUrl: '/views/StoryDetailView',
         controller: 'storyDetailViewModel'
@@ -16,6 +21,7 @@
     // omit the hashtag in the url if possible
     $locationProvider.html5Mode(true);
 });
+
 
 // This directive allows to define a html5 drag & drop dropzone
 // It will call the specified method on the current scope.

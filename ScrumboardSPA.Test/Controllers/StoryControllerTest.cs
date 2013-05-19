@@ -6,6 +6,7 @@
     using System.Web.Http.Controllers;
     using System.Web.Http.Hosting;
     using System.Web.Http.Routing;
+    using Data.Model;
     using Data.Story;
     using Data.Story.State;
     using FakeItEasy;
@@ -36,9 +37,9 @@
         public void GetStory_WhenStoryExists_ThenReturnStory()
         {
             const int StoryId = 42;
-            this.SetupStories(new UserStory[]
+            this.SetupStories(new[]
                                   {
-                                      new UserStory {Id = StoryId}
+                                      new UserStory(StoryId)
                                   });
 
             UserStory result = this.testee.GetStory(StoryId);
@@ -49,9 +50,9 @@
         [Test]
         public void GetStory_WhenStoryDoesNotExists_ThenReturn404NotFound()
         {
-            this.SetupStories(new UserStory[]
+            this.SetupStories(new[]
                                   {
-                                      new UserStory {Id = 31}
+                                      new UserStory(31  )
                                   });
 
             Action action = () => this.testee.GetStory(13);
@@ -61,31 +62,76 @@
         }
 
         [Test]
-        public void SetState_WhenStoryExists_ThenSetNewStateOnStory()
+        public void SetState_WhenStoryExists_ThenReturnUpdatedStory()
         {
-            const int StoryId = 42;
-            var story = new UserStory {Id = StoryId, State = StoryState.SprintBacklog};
-            this.SetupStories(new UserStory[]
-                                  {
-                                      story
-                                  });
+            const int UpdatedStoryId = 99;
+            A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
 
-            this.testee.SetState(StoryId, StoryState.WorkInProgress);
+            HttpResponseMessage result = this.testee.SetState(42, StoryState.WorkInProgress, Guid.NewGuid());
 
-            story.State.Should().Be(StoryState.WorkInProgress);
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            var updatedStory = result.Content.As<ObjectContent>().Value.As<UserStory>();
+            updatedStory.Id.Should().Be(UpdatedStoryId);
         }
 
         [Test]
-        public void CreateStory_ShouldCreateNewStory()
+        public void SetState_WhenStoryDoesNotExists_ThenReturnHttpStatusCodeNotFound()
         {
-            UserStory expectedUserStory = new UserStory();
-            A.CallTo(() => this.storyRepository.AddNewStory(A<UserStory>._)).Returns(expectedUserStory);
+            A.CallTo(() => this.storyRepository.GetStory(A<int>._)).Returns(null);
 
-            HttpResponseMessage result = this.testee.CreateStory(new NewUserStory());
+            HttpResponseMessage result = this.testee.SetState(22, StoryState.WorkInProgress, Guid.NewGuid());
+
+            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Test]
+        public void SetState_WhenConcurrencyException_ThenReturnHttpStatusCodeConflictWithBothStoriesAttached()
+        {
+            UserStory original = new UserStory(44);
+            UserStory requested = new UserStory(55);
+            A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Throws(
+                new RepositoryConcurrencyException(original, requested));
+
+            HttpResponseMessage result = this.testee.SetState(22, StoryState.WorkInProgress, Guid.NewGuid());
+
+            result.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            var content = result.Content.As<ObjectContent>().Value.As<ConcurrencyErrorModel>();
+            content.Original.As<UserStory>().Should().Be(original);
+            content.Requested.Should().Be(requested);
+        }
+
+        [Test]
+        public void SetState_WhenEmtpyGuidProvided_ThenReturnValidationError()
+        {
+            HttpResponseMessage result = this.testee.SetState(22, StoryState.WorkInProgress, new Guid());
+
+            result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Test]
+        public void CreateStory_ShouldReturnCreatedStory()
+        {
+            UserStory expectedUserStory = new UserStory(13);
+            A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).Returns(expectedUserStory);
+
+            HttpResponseMessage result = this.testee.CreateStory(new CreateUserStoryModel()
+                                                                     {
+                                                                         Title = "A sample title"
+                                                                     });
 
             result.StatusCode.Should().Be(HttpStatusCode.Created);
-            UserStory createdStory = (UserStory) result.Content.As<ObjectContent>().Value;
+            UserStory createdStory = (UserStory)result.Content.As<ObjectContent>().Value;
             createdStory.ShouldHave().AllProperties().EqualTo(expectedUserStory);
+        }
+
+        [Test]
+        public void CreateStory_WhenNoTitleProvided_ThenDoNotCreateStoryAndReturnError()
+        {
+            HttpResponseMessage result = this.testee.CreateStory(new CreateUserStoryModel());
+
+            result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+           
+            A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).MustNotHaveHappened();
         }
 
         private IEnumerable<UserStory> SetupStories(IEnumerable<UserStory> stories)

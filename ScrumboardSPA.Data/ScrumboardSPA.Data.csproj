@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Story\IStoryRepository.cs" />
+    <Compile Include="Story\NewUserStory.cs" />
+    <Compile Include="Story\RepositoryConcurrencyException.cs" />
     <Compile Include="Story\State\IStateDetailRepository.cs" />
     <Compile Include="Story\State\StateDetail.cs" />
     <Compile Include="Story\State\StateDetailRepository.cs" />

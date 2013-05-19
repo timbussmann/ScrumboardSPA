@@ -1,107 +1,70 @@
 ﻿namespace ScrumboardSPA.Data.Story
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Model;
     using ScrumboardSPA.Data.Story.State;
 
     public class StoryRepository : IStoryRepository
     {
-        private readonly List<UserStory> userStories =
-            new List<UserStory>(new[]
-                                    {
-                                        new UserStory
-                                            {
-                                                Id = 1,
-                                                Title =
-                                                    "REST API: Stories anzeigen",
-                                                Description =
-                                                    "Als Entwickler möchte ich die Stories des aktuellen Sprints sehen.",
-                                                StoryPoints = 2,
-                                                StackRank = 999,
-                                                State = StoryState.Done
-                                            },
-                                        new UserStory
-                                            {
-                                                Id = 2,
-                                                Title =
-                                                    "REST API: Story laden",
-                                                Description =
-                                                    "Als Entwickler möchte ich eine einzelne Story laden.",
-                                                StoryPoints = 1,
-                                                StackRank = 990,
-                                                State = StoryState.Done
-                                            },
-                                        new UserStory
-                                            {
-                                                Id = 4,
-                                                Title = "Story Detail View",
-                                                Description =
-                                                    "Als Benutzer möchte ich detailliertere Informationen zu einer Story erhalten.",
-                                                StoryPoints = 2,
-                                                StackRank = 980,
-                                                State = StoryState.Done
-                                            },
-                                        new UserStory
-                                            {
-                                                Id = 5,
-                                                Title =
-                                                    "Story mit drag & drop verschieben",
-                                                Description =
-                                                    "Als Benutzer möchte ich eine Story auf dem Scrumboard auf einen anderen Status verschieben können.",
-                                                StackRank = 950,
-                                                State =
-                                                    StoryState.WorkInProgress,
-                                                StoryPoints = 5
-                                            },
-                                        new UserStory
-                                            {
-                                                Id = 6,
-                                                Title = "Ladescreen anzeigen",
-                                                Description =
-                                                    "Als Benuter möchte ich einen Ladebalken sehen solange die Appliaktion noch nicht bereit ist.",
-                                                StackRank = 600,
-                                                State =
-                                                    StoryState.SprintBacklog
-                                            },
-                                        new UserStory
-                                            {
-                                                Id = 3,
-                                                Title =
-                                                    "REST API: Progress links auf Story",
-                                                Description =
-                                                    "Als API Benutzer möchte ich die möglichen Statusänderungen auf einer Story sehen",
-                                                StoryPoints = 3,
-                                                StackRank = 500,
-                                                State =
-                                                    StoryState.SprintBacklog
-                                            },
-                                        new UserStory
-                                            {
-                                                Id = 7,
-                                                Title =
-                                                    "Storypoints auf Storykarte anzeigen",
-                                                Description =
-                                                    "Als Benutzer möchte ich die Storypoints einer Story am Scrumboard sehen.",
-                                                StackRank = 499,
-                                                State =
-                                                    StoryState.SprintBacklog,
-                                                StoryPoints = 1
-                                            }
-                                    });
+        private readonly object lockObject = new object();
+        private readonly List<UserStory> userStories = new List<UserStory>();
 
         public IEnumerable<UserStory> GetAllStories()
         {
-            return this.userStories.OrderByDescending(s => s.StackRank);
+            return this.userStories.Select(s => (UserStory)s.Clone());
         }
 
-        public UserStory AddNewStory(UserStory story)
+        public UserStory AddNewStory(NewUserStory newStory)
         {
-            int newId = userStories.Any() ? userStories.Max(s => s.Id) + 1 : 0;
-            story.Id = newId;
-
+            int id = this.GetNewId();
+            var story = new UserStory(id)
+                                  {
+                                      Title = newStory.Title,
+                                      Description = newStory.Description,
+                                      State = newStory.State,
+                                      StackRank = newStory.StackRank,
+                                      StoryPoints = newStory.StoryPoints
+                                  };
+            
             this.userStories.Add(story);
+            return (UserStory) story.Clone();
+        }
 
-            return story;
+        public UserStory UpdateStory(UserStory story)
+        {
+            var originalStory = this.userStories.Find(s => s.Id == story.Id);
+
+            if (originalStory.Etag != story.Etag)
+            {
+                throw new RepositoryConcurrencyException(originalStory, story);
+            }
+
+            int index = this.userStories.IndexOf(originalStory);
+            UserStory newStory = new UserStory(story);
+            this.userStories[index] = newStory;
+
+            return (UserStory) newStory.Clone();
+        }
+
+        public UserStory GetStory(int id)
+        {
+            var story = this.userStories.SingleOrDefault(s => s.Id == id);
+
+            if (story != null)
+            {
+                return (UserStory) story.Clone();
+            }
+            return null;
+        }
+
+        private int GetNewId()
+        {
+            lock (this.lockObject)
+            {
+                return userStories.Any() ? userStories.Max(s => s.Id) + 1 : 0;
+            }
         }
     }
 }
