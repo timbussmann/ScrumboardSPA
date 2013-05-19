@@ -4,6 +4,12 @@
 
     public class UserStory
     {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
         public int Id { get;  set; }
         public StoryState State { get; set; }
         public string Title { get; set; }
