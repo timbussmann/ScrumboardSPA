@@ -47,7 +47,6 @@
                     } else {
                         notificationService.notifyError('The server responded with a Statuscode ' + statusCode, 'Update failed');
                     }
-                    hub.server.updateStory(updatedStory);
                 });
             };
         }]);

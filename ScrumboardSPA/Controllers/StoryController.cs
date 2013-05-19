@@ -53,6 +53,8 @@
                 story.State = state;
                 story.Etag = etag;
                 UserStory updatedStory = this.storyRepository.UpdateStory(story);
+                var context = GlobalHost.ConnectionManager.GetHubContext<StoryHub>();
+                context.Clients.All.updateStory(updatedStory);
                 return this.Request.CreateResponse(HttpStatusCode.OK, updatedStory);
             }
             catch (RepositoryConcurrencyException ex)
