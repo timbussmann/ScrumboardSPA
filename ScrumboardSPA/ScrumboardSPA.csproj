@@ -161,12 +161,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sockets\IStoryHubService.cs" />
+    <Compile Include="Sockets\StoryHubService.cs" />
     <Compile Include="StoryHub.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\appModule.js" />
     <Content Include="App\services\notificationService.js" />
     <Content Include="App\services\scrumboardService.js" />
+    <Content Include="App\services\signalREventsService.js" />
     <Content Include="App\viewmodels\newStoryViewModel.js" />
     <Content Include="App\viewmodels\scrumboardViewModel.js" />
     <Content Include="App\viewmodels\storyDetailViewModel.js" />
@@ -486,6 +489,7 @@
     <Content Include="Scripts\i18n\angular-locale_zu-za.js" />
     <Content Include="Scripts\i18n\angular-locale_zu.js" />
     <Content Include="Content\toastr.less" />
+    <None Include="Properties\PublishProfiles\localDeployment.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
@@ -524,7 +528,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Sockets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

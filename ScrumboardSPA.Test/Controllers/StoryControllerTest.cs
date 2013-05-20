@@ -16,6 +16,8 @@
     using System;
     using System.Collections.Generic;
 
+    using ScrumboardSPA.Sockets;
+
     [TestFixture]
     class StoryControllerTest
     {
@@ -23,12 +25,15 @@
 
         private StoryController testee;
 
+        private IStoryHubService storyHubService;
+
         [SetUp]
         public void SetUp()
         {
             this.storyRepository = A.Fake<IStoryRepository>();
+            this.storyHubService = A.Fake<IStoryHubService>();
 
-            this.testee = new StoryController(this.storyRepository);
+            this.testee = new StoryController(this.storyRepository, this.storyHubService);
 
             SetupControllerForTests(testee);
         }
@@ -72,6 +77,17 @@
             result.StatusCode.Should().Be(HttpStatusCode.OK);
             var updatedStory = result.Content.As<ObjectContent>().Value.As<UserStory>();
             updatedStory.Id.Should().Be(UpdatedStoryId);
+        }
+
+        [Test]
+        public void SetState_WhenStoryExists_ThenCallUpdateStoryOnService()
+        {
+            const int UpdatedStoryId = 99;
+            A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
+
+            HttpResponseMessage result = this.testee.SetState(42, StoryState.WorkInProgress, Guid.NewGuid());
+
+            A.CallTo(() => this.storyHubService.UpdateStory(A<UserStory>.That.Matches(us => us.Id == UpdatedStoryId))).MustHaveHappened(); 
         }
 
         [Test]

@@ -12,6 +12,7 @@ namespace ScrumboardSPA.App_Start
     using Ninject.Web.Common;
     using ScrumboardSPA.Data.Story;
     using ScrumboardSPA.Data.Story.State;
+    using ScrumboardSPA.Sockets;
 
     public static class NinjectWebCommon 
     {
@@ -100,6 +101,7 @@ namespace ScrumboardSPA.App_Start
         {
             kernel.Bind<IStoryRepository>().To<StoryRepository>().InSingletonScope();
             kernel.Bind<IStateDetailRepository>().To<StateDetailRepository>().InSingletonScope();
+            kernel.Bind<IStoryHubService>().To<StoryHubService>();
         }        
     }
 }

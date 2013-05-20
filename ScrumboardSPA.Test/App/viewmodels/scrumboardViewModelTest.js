@@ -30,6 +30,10 @@ describe('Scrumboard Viewmodel', function () {
         notifySuccess: function () { }
     };
 
+    var signalREventsService = {          
+        registerUpdatedStoryEvent: function (updateFunction) { this.registeredUpdateStoryFunction = updateFunction; }
+    };
+
     beforeEach(function() {
         module('appModule');
         inject(function($rootScope, $controller) {
@@ -38,7 +42,8 @@ describe('Scrumboard Viewmodel', function () {
                 $scope: scope,
                 scrumboardService: scrumboardService,
                 $location: location,
-                notificationService: notificationService
+                notificationService: notificationService,
+                signalREventsService: signalREventsService
             });
         });
     });
@@ -77,7 +82,8 @@ describe('Scrumboard Viewmodel', function () {
             findWhere: function () { return oldStory; },
             indexOf: function () { return 0; }
         };
-        $.connection.storyHub.client.updateStory(newStory);
+        
+        signalREventsService.registeredUpdateStoryFunction(newStory);
 
         expect(scope.Stories[0]).toBe(newStory);
     });

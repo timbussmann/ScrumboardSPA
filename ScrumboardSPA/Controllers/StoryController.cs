@@ -11,13 +11,18 @@
 
     using Microsoft.AspNet.SignalR;
 
+    using ScrumboardSPA.Sockets;
+
     public class StoryController : ApiController
     {
         private readonly IStoryRepository storyRepository;
 
-        public StoryController(IStoryRepository storyRepository)
+        private readonly IStoryHubService storyHubService;
+
+        public StoryController(IStoryRepository storyRepository, IStoryHubService storyHubService)
         {
             this.storyRepository = storyRepository;
+            this.storyHubService = storyHubService;
         }
 
         [HttpGet]
@@ -53,8 +58,7 @@
                 story.State = state;
                 story.Etag = etag;
                 UserStory updatedStory = this.storyRepository.UpdateStory(story);
-                var context = GlobalHost.ConnectionManager.GetHubContext<StoryHub>();
-                context.Clients.All.updateStory(updatedStory);
+                this.storyHubService.UpdateStory(updatedStory);
                 return this.Request.CreateResponse(HttpStatusCode.OK, updatedStory);
             }
             catch (RepositoryConcurrencyException ex)
