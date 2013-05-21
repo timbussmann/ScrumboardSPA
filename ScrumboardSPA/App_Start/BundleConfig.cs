@@ -20,7 +20,7 @@ namespace ScrumboardSPA
                 .Include("~/Content/bootstrap.css")
                 .Include("~/Content/bootstrap-responsive.css")
                 .Include("~/Content/toastr.css")
-                .Include("~/Content/site.css"));
+                .Include("~/Content/Site.css"));
             
             bundles.Add(new ScriptBundle("~/bundles/3rdParty")
                 .Include("~/Scripts/bootstrap.js")
