@@ -10,6 +10,9 @@
             };
             conflicts.push(conflict);
             return _.indexOf(conflicts, conflict);
+        },
+        getConflict: function(conflictNumber) {
+            return conflicts[conflictNumber];
         }
     };
 });

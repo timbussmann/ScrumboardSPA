@@ -1,3 +1,18 @@
 ﻿<div id="resolveConflictView">
-    <p>This is the resolve view for conflict {{ConflictNr}}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Original</th>
+                <th>Yours</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="(key, value) in Conflict.original">
+                <td>{{key}}</td>
+                <td>{{value}}</td>
+                <td>{{Conflict.requested[key]}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
