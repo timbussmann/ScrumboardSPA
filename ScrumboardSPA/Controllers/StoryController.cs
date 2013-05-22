@@ -8,10 +8,12 @@
     using Data.Model;
     using Data.Story;
     using Data.Story.State;
+    using ScrumboardSPA.Data.Conflicts;
 
     public class StoryController : ApiController
     {
         private readonly IStoryRepository storyRepository;
+        private readonly IConflictRepository conflictRepository;
 
         public StoryController(IStoryRepository storyRepository)
         {
@@ -55,8 +57,14 @@
             }
             catch (RepositoryConcurrencyException ex)
             {
-                return Request.CreateResponse(HttpStatusCode.Conflict,
-                                              new ConcurrencyErrorModel(){Original = ex.Original, Requested = ex.Requested});
+                string conflictId = this.conflictRepository.AddConflict(ex.Original, ex.Requested);
+                return Request.CreateResponse(
+                    HttpStatusCode.Conflict,
+                    new ConcurrencyErrorModel
+                        {
+                            Message = "A concurrency conflict occured updating the story", 
+                            ConflictId = conflictId
+                        });
             }
         }
 
@@ -93,7 +101,7 @@
 
     public class ConcurrencyErrorModel
     {
-        public UserStory Original { get; set; }
-        public UserStory Requested { get; set; }
+        public string Message { get; set; }
+        public string ConflictId { get; set; }
     }
 }

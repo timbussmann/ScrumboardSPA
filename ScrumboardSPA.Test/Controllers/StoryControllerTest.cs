@@ -85,8 +85,9 @@
         }
 
         [Test]
-        public void SetState_WhenConcurrencyException_ThenReturnHttpStatusCodeConflictWithBothStoriesAttached()
+        public void SetState_WhenConcurrencyException_ThenReturnHttpStatusCodeConflictWithConflictIdAttached()
         {
+            const string ExpectedConflictId = "42";
             UserStory original = new UserStory(44);
             UserStory requested = new UserStory(55);
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Throws(
@@ -96,8 +97,7 @@
 
             result.StatusCode.Should().Be(HttpStatusCode.Conflict);
             var content = result.Content.As<ObjectContent>().Value.As<ConcurrencyErrorModel>();
-            content.Original.As<UserStory>().Should().Be(original);
-            content.Requested.Should().Be(requested);
+            content.ConflictId.Should().Be(ExpectedConflictId);
         }
 
         [Test]
