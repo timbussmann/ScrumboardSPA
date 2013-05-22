@@ -17,7 +17,7 @@
         [ActionName("GetCacheManifest")]
         public ManifestResult GetCacheManifest()
         {
-            return new ManifestResult("1", Server, new[]{"/App", "/Scripts", "/Content"});
+            return new ManifestResult("1", Server);
         }
     }
 }

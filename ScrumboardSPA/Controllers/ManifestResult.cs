@@ -6,6 +6,7 @@ namespace ScrumboardSPA.Controllers
 {
     using System.IO;
     using System.Web.Mvc;
+    using System.Web.Optimization;
 
     /// <summary>
     /// Dynamically creates a manifest file containing all files in the specified includeDirectories
@@ -14,29 +15,33 @@ namespace ScrumboardSPA.Controllers
     {
         private readonly string version;
         private readonly HttpServerUtilityBase server;
-        private readonly IEnumerable<string> includeDirectories;
 
-        public ManifestResult(string version, HttpServerUtilityBase server, IEnumerable<string> includeDirectories) : base("text/cache-manifest")
+        public ManifestResult(string version, HttpServerUtilityBase server) : base("text/cache-manifest")
         {
             this.version = version;
             this.server = server;
-            this.includeDirectories = includeDirectories;
         }
 
         protected override void WriteFile(HttpResponseBase response)
         {
+
+            
             response.Output.WriteLine("CACHE MANIFEST");
 
             // Increase version number if any files listed in this manifest file has changed
             response.Output.WriteLine("#v" + version);
 
+            response.Output.WriteLine();
             response.Output.WriteLine("CACHE:");
 
-            // Not optimal since all js files are listed for caching, even if they are not used due to bundling configuration
-            IEnumerable<string> cachableFiles = this.includeDirectories.SelectMany(this.GetFilesIn);
-            foreach (string cachableFile in cachableFiles)
+            // Write all script and css files from bundles:
+            foreach (Bundle bundle in BundleTable.Bundles)
             {
-                response.Output.WriteLine(cachableFile);
+                IEnumerable<string> bundleScripts = BundleResolver.Current.GetBundleContents(bundle.Path);
+                foreach (string bundleScript in bundleScripts)
+                {
+                    response.Output.WriteLine(bundleScript.Replace("~", string.Empty));
+                }
             }
 
             // views:
@@ -48,6 +53,7 @@ namespace ScrumboardSPA.Controllers
             response.Output.WriteLine("/views/StoryDetailView");
             response.Output.WriteLine("/views/ScrumboardView");
 
+            response.Output.WriteLine();
             response.Output.WriteLine("NETWORK:");
             response.Output.WriteLine("*");
         }
