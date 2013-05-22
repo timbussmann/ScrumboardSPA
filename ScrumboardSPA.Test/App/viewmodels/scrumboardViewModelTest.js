@@ -14,8 +14,9 @@ describe('Scrumboard Viewmodel', function () {
         getStories: function (callback) {
             this.storiesCallback = callback;
         },
-        setStoryState: function(storyId, newState, callback) {
-            this.setStoryStateCallback = callback;
+        setStoryState: function(storyId, newState, successCallback, errorCallback) {
+            this.setStoryStateSuccessCallback = successCallback;
+            this.setStoryStateErrorCallback = errorCallback;
             this.setStoryStateParameter = { StoryId: storyId, NewState: newState };
         }
     };
@@ -25,7 +26,12 @@ describe('Scrumboard Viewmodel', function () {
     };
 
     var notificationService = {
-        notifySuccess: function () { }
+        notifySuccess: function () { },
+        notifyError: function () { }
+    };
+    
+    var conflictService = {
+        addConflict: function () { return 42; }
     };
 
     beforeEach(function() {
@@ -36,7 +42,8 @@ describe('Scrumboard Viewmodel', function () {
                 $scope: scope,
                 scrumboardService: scrumboardService,
                 $location: location,
-                notificationService: notificationService
+                notificationService: notificationService,
+                conflictService: conflictService
             });
         });
     });
@@ -76,9 +83,25 @@ describe('Scrumboard Viewmodel', function () {
 
         expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
         expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
-        scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
+        scrumboardService.setStoryStateSuccessCallback({ State: 'TestState', Id: 42 });
         expect(scope.Stories[0].State).toBe('TestState');
         expect(notificationService.notifySuccess).toHaveBeenCalled();
+    });
+
+    it('should add merge conflict to conflicts and navigate to resolve view', function() {
+        var httpConflictStatusCode = 409;
+        var conflict = {
+            original: 'The original',
+            requested: 'The requested'
+        };
+        spyOn(conflictService, 'addConflict');
+        spyOn(location, 'url');
+        
+        scope.UpdateStoryState({ Id: 33, State: 'done' }, { State: 'ToVerify' });
+        scrumboardService.setStoryStateErrorCallback(conflict, httpConflictStatusCode);
+
+        expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.original, conflict.requested);
+        expect(location.url).toHaveBeenCalledWith('/conflict/42');
     });
 });
 

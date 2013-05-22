@@ -1,6 +1,6 @@
 ﻿app.controller('scrumboardViewModel',
-    ['$scope', 'scrumboardService', '$location', 'notificationService',
-        function($scope, scrumboardService, $location, notificationService) {
+    ['$scope', 'scrumboardService', '$location', 'notificationService', 'conflictService',
+        function($scope, scrumboardService, $location, notificationService, conflictService) {
 
             scrumboardService.getStates(function(states) {
                 $scope.States = states;
@@ -27,8 +27,10 @@
                     notificationService.notifySuccess('Moved story to "' + newState.Name + '"');
                 }, function (error, statusCode) {
                     // Conflict
-                    if (statusCode = 409) {
+                    if (statusCode == 409) {
                         notificationService.notifyError('Story ' + story.Id + ' has already been modified by another user', 'Concurrency conflict');
+                        conflictService.addConflict(error.original, error.requested);
+                        $location.url('/conflict/' + 42);
                     } else {
                         notificationService.notifyError('The server responded with a Statuscode ' + statusCode, 'Update failed');
                     }

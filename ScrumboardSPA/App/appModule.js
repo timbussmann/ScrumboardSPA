@@ -15,6 +15,11 @@
         controller: 'storyDetailViewModel'
     });
 
+    $routeProvider.when('/conflict/:conflictNumber', {
+        templateUrl: '/views/ResolveConflictView',
+        controller: 'resolveConflictViewModel'
+    });
+
     // start with scrumboard view
     $routeProvider.otherwise({redirectTo: '/scrumboard'});
 
