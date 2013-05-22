@@ -1,7 +1,8 @@
 ﻿app.controller('resolveConflictViewModel',
-    ['$scope', '$routeParams',
-        function($scope, $routeParams) {
+    ['$scope', '$routeParams', 'conflictService', '$location',
+        function($scope, $routeParams, conflictService, $location) {
 
-            $scope.ConflictNr = $routeParams.conflictNumber;
+            var conflict = conflictService.getConflict($routeParams.conflictNumber);
 
+            $scope.Conflict = conflict;
         }]);

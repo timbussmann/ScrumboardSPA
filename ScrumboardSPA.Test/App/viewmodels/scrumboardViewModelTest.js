@@ -91,8 +91,8 @@ describe('Scrumboard Viewmodel', function () {
     it('should add merge conflict to conflicts and navigate to resolve view', function() {
         var httpConflictStatusCode = 409;
         var conflict = {
-            original: 'The original',
-            requested: 'The requested'
+            Original: 'The original',
+            Requested: 'The requested'
         };
         spyOn(conflictService, 'addConflict');
         spyOn(location, 'url');
@@ -100,7 +100,7 @@ describe('Scrumboard Viewmodel', function () {
         scope.UpdateStoryState({ Id: 33, State: 'done' }, { State: 'ToVerify' });
         scrumboardService.setStoryStateErrorCallback(conflict, httpConflictStatusCode);
 
-        expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.original, conflict.requested);
+        expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.Original, conflict.Requested);
         expect(location.url).toHaveBeenCalledWith('/conflict/42');
     });
 });

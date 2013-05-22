@@ -29,7 +29,7 @@
                     // Conflict
                     if (statusCode == 409) {
                         notificationService.notifyError('Story ' + story.Id + ' has already been modified by another user', 'Concurrency conflict');
-                        conflictService.addConflict(error.original, error.requested);
+                        conflictService.addConflict(error.Original, error.Requested);
                         $location.url('/conflict/' + 42);
                     } else {
                         notificationService.notifyError('The server responded with a Statuscode ' + statusCode, 'Update failed');
