@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Conflicts\ConflictRepository.cs" />
     <Compile Include="Conflicts\IConflictRepository.cs" />
+    <Compile Include="Conflicts\StoryUpdateConflict.cs" />
     <Compile Include="Story\IStoryRepository.cs" />
     <Compile Include="Story\NewUserStory.cs" />
     <Compile Include="Story\RepositoryConcurrencyException.cs" />
