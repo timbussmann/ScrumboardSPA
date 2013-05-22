@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="Controllers\StoriesControllerTest.cs" />
     <Compile Include="Controllers\StoryControllerTest.cs" />
-    <Compile Include="Model\ConflictRepositoryTest.cs" />
     <Compile Include="Model\StoryRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
