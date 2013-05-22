@@ -200,7 +200,6 @@
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Test\NewStoryView.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -215,9 +214,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\ScrumboardView.cshtml" />
     <Content Include="Views\Shared\StoryDetailView.cshtml" />
-    <Content Include="Test\ScrumboardView.html" />
     <None Include="Views\Shared\NewStoryView.cshtml" />
-    <Content Include="Views\cache.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
