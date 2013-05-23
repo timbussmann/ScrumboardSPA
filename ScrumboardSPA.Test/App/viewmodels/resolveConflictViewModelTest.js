@@ -38,8 +38,8 @@ describe('resolve conflict Viewmodel', function () {
 
     it('should show original and requested stories', function() {
         var expectedConflict = {
-            original: { Equal: 'Text', Different: '123' },
-            requested: { Equal: 'Text', Different: '456' }
+            original: { Equal: 'Text', Different: '123', Id: 1 },
+            requested: { Equal: 'Text', Different: '456', Id: 1 }
         };
         conflictService.getConflict = function () {
             return expectedConflict;

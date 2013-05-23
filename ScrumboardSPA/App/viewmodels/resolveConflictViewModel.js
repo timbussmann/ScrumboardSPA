@@ -4,7 +4,7 @@
 
             var conflict = conflictService.getConflict($routeParams.conflictNumber);
 
-            var mappedConflicts = _.map(conflict.original, function(value, key) {
+            var mappedConflicts = _.map(_.omit(conflict.original, 'Id'), function(value, key) {
                 return {
                     key: key,
                     original: value,
