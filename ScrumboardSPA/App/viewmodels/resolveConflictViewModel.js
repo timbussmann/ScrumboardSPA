@@ -4,5 +4,14 @@
 
             var conflict = conflictService.getConflict($routeParams.conflictNumber);
 
-            $scope.Conflict = conflict;
+            var mappedConflicts = _.map(conflict.original, function(value, key) {
+                return {
+                    key: key,
+                    original: value,
+                    requested: conflict.requested[key],
+                    hasConflict: value !== conflict.requested[key]
+                };
+            });
+
+            $scope.Conflicts = mappedConflicts;
         }]);

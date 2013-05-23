@@ -8,10 +8,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="(key, value) in Conflict.original">
-                <td>{{key}}</td>
-                <td>{{value}}</td>
-                <td>{{Conflict.requested[key]}}</td>
+            <tr data-ng-repeat="conflict in Conflicts" data-ng-class="{error:conflict.hasConflict}">
+                <td>{{conflict.key}}</td>
+                <td>{{conflict.original}}</td>
+                <td>{{conflict.requested}}</td>
             </tr>
         </tbody>
     </table>
