@@ -16,6 +16,9 @@ describe('Scrumboard Viewmodel', function () {
         getStories: function (callback) {
             this.storiesCallback = callback;
         },
+        getStory: function (id, callback) {
+            this.storyCallback = callback;
+        },
         setStoryState: function(storyId, newState, callback) {
             this.setStoryStateCallback = callback;
             this.setStoryStateParameter = { StoryId: storyId, NewState: newState };
@@ -84,7 +87,8 @@ describe('Scrumboard Viewmodel', function () {
         };
         
         signalREventsService.registeredUpdateStoryFunction(newStory);
-
+        scrumboardService.storyCallback(newStory);
+        
         expect(scope.Stories[0]).toBe(newStory);
     });
 
@@ -98,8 +102,6 @@ describe('Scrumboard Viewmodel', function () {
         expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
         expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
         scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
-        expect(scope.Stories[0].State).toBe('TestState');
-        expect(notificationService.notifySuccess).toHaveBeenCalled();
     });
 });
 

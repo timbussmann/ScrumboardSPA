@@ -5,7 +5,7 @@
     /// <summary>
     /// The StoryHubService interface.
     /// </summary>
-    public interface IStoryHubService
+    public interface IStoryHubContextWrapper
     {
         /// <summary>
         /// Updates the story.

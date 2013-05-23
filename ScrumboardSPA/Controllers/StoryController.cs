@@ -17,9 +17,9 @@
     {
         private readonly IStoryRepository storyRepository;
 
-        private readonly IStoryHubService storyHubService;
+        private readonly IStoryHubContextWrapper storyHubService;
 
-        public StoryController(IStoryRepository storyRepository, IStoryHubService storyHubService)
+        public StoryController(IStoryRepository storyRepository, IStoryHubContextWrapper storyHubService)
         {
             this.storyRepository = storyRepository;
             this.storyHubService = storyHubService;
@@ -59,12 +59,12 @@
                 story.Etag = etag;
                 UserStory updatedStory = this.storyRepository.UpdateStory(story);
                 this.storyHubService.UpdateStory(updatedStory);
-                return this.Request.CreateResponse(HttpStatusCode.OK, updatedStory);
+                return this.Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (RepositoryConcurrencyException ex)
             {
                 return Request.CreateResponse(HttpStatusCode.Conflict,
-                                              new ConcurrencyErrorModel(){Original = ex.Original, Requested = ex.Requested});
+                                              new ConcurrencyErrorModel() { Original = ex.Original, Requested = ex.Requested});
             }
         }
 

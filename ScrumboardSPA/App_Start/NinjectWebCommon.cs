@@ -101,7 +101,7 @@ namespace ScrumboardSPA.App_Start
         {
             kernel.Bind<IStoryRepository>().To<StoryRepository>().InSingletonScope();
             kernel.Bind<IStateDetailRepository>().To<StateDetailRepository>().InSingletonScope();
-            kernel.Bind<IStoryHubService>().To<StoryHubService>();
+            kernel.Bind<IStoryHubContextWrapper>().To<StoryHubContextWrapper>();
         }        
     }
 }
