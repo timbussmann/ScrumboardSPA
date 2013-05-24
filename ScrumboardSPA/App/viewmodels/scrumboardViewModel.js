@@ -32,7 +32,6 @@
                 var originalStory = _.findWhere($scope.Stories, { Id: updatedStory.Id });
                 var storyIndex = _.indexOf($scope.Stories, originalStory);
                 $scope.Stories[storyIndex] = updatedStory;
-                notificationService.notifySuccess('Story #' + updatedStory.Id + ' updated');
             });
 
             $scope.$on('UpdateConflicted', function(event, conflict) {

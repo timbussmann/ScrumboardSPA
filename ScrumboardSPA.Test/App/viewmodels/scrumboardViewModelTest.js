@@ -91,7 +91,6 @@ describe('Scrumboard Viewmodel', function () {
         rootScope.$broadcast('UpdateSuccessful', { State: 'TestState', Id: 42 });
 
         expect(scope.Stories[0].State).toBe('TestState');
-        expect(notificationService.notifySuccess).toHaveBeenCalled();
     });
 
     it('should add merge conflict to conflicts and navigate to resolve view', function() {
