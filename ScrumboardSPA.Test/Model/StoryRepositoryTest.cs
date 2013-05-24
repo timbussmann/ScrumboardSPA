@@ -35,6 +35,7 @@
             UserStory result = this.testee.AddNewStory(newUserStory);
 
             result.ShouldHave().SharedProperties().EqualTo(newUserStory);
+            result.Id.Should().Be(1, "because ids should start at 1");
         }
 
         [Test]

@@ -6,7 +6,7 @@
 /// <reference path="../../../scrumboardspa/app/viewmodels/scrumboardviewmodel.js" />
 describe('Scrumboard Viewmodel', function () {
 
-    var scope;
+    var scope, rootScope;
     var scrumboardService = {
         getStates: function(callback) {
             this.statesCallback = callback;
@@ -14,8 +14,9 @@ describe('Scrumboard Viewmodel', function () {
         getStories: function (callback) {
             this.storiesCallback = callback;
         },
-        setStoryState: function(storyId, newState, callback) {
-            this.setStoryStateCallback = callback;
+        setStoryState: function(storyId, newState, successCallback, errorCallback) {
+            this.setStoryStateSuccessCallback = successCallback;
+            this.setStoryStateErrorCallback = errorCallback;
             this.setStoryStateParameter = { StoryId: storyId, NewState: newState };
         }
     };
@@ -25,18 +26,23 @@ describe('Scrumboard Viewmodel', function () {
     };
 
     var notificationService = {
-        notifySuccess: function () { }
+        notifySuccess: function () { },
+        notifyError: function () { }
     };
+
+    var conflictService = {};
 
     beforeEach(function() {
         module('appModule');
-        inject(function($rootScope, $controller) {
+        inject(function ($rootScope, $controller) {
+            rootScope = $rootScope;
             scope = $rootScope.$new();
             $controller('scrumboardViewModel', {
                 $scope: scope,
                 scrumboardService: scrumboardService,
                 $location: location,
-                notificationService: notificationService
+                notificationService: notificationService,
+                conflictService: conflictService
             });
         });
     });
@@ -74,11 +80,31 @@ describe('Scrumboard Viewmodel', function () {
 
         scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
 
-        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
-        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
-        scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
+        expect(stories[0].State).toBe('ToVerify');
+    });
+    
+    it('should update story when update successful', function () {
+        spyOn(notificationService, 'notifySuccess');
+        var stories = [{ Title: 'story1', State: 'done', Id: 42 }];
+        scrumboardService.storiesCallback(stories);
+
+        rootScope.$broadcast('UpdateSuccessful', { State: 'TestState', Id: 42 });
+
         expect(scope.Stories[0].State).toBe('TestState');
-        expect(notificationService.notifySuccess).toHaveBeenCalled();
+    });
+
+    it('should add merge conflict to conflicts and navigate to resolve view', function() {
+        var conflict = {
+            Original: 'The original',
+            Requested: 'The requested'
+        };
+        conflictService.addConflict = jasmine.createSpy('addConflict').andReturn(42);
+        spyOn(location, 'url');
+
+        rootScope.$broadcast('UpdateConflicted', conflict);
+
+        expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.Original, conflict.Requested);
+        expect(location.url).toHaveBeenCalledWith('/conflict/42');
     });
 });
 
