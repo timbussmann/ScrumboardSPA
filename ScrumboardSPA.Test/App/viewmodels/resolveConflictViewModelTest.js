@@ -6,18 +6,12 @@
 /// <reference path="../../../scrumboardspa/app/viewmodels/resolveConflictViewModel.js" />
 describe('resolve conflict Viewmodel', function () {
     var scope;
-    
-    var scrumboardService = {
-    };
-    
     var location = {
         url: function () { }
     };
-
     var conflictService = {
         getConflict: function() { }
     };
-
     var $routeParams = { conflictNumber: 42 };
     
     function createController() {
@@ -36,38 +30,40 @@ describe('resolve conflict Viewmodel', function () {
         module('appModule');
     });
 
-    it('should show original and requested stories', function() {
-        var expectedConflict = {
-            original: { Equal: 'Text', Different: '123'},
-            requested: { Equal: 'Text', Different: '456'}
-        };
-        conflictService.getConflict = function () {
-            return expectedConflict;
-        };
+    describe('on initialization', function() {
+        it('should show original and requested stories', function () {
+            var expectedConflict = {
+                original: { Equal: 'Text', Different: '123' },
+                requested: { Equal: 'Text', Different: '456' }
+            };
+            conflictService.getConflict = function () {
+                return expectedConflict;
+            };
 
-        // create controller because the logic will be executed at initialization:
-        createController();
+            // create controller because the logic will be executed at initialization:
+            createController();
 
-        expect(scope.Conflicts).toEqual([
-            { key: 'Equal', original: 'Text', requested: 'Text', hasConflict: false },
-            { key: 'Different', original: '123', requested: '456', hasConflict: true }
-        ]);
-    });
+            expect(scope.Conflicts).toEqual([
+                { key: 'Equal', original: 'Text', requested: 'Text', hasConflict: false },
+                { key: 'Different', original: '123', requested: '456', hasConflict: true }
+            ]);
+        });
 
-    it('should hide Id and Etag property', function() {
-        var expectedConflict = {
-            original: { Equal: 'Text', Etag: '123', Id: 1 },
-            requested: { Equal: 'Text', Etag: '456', Id: 1 }
-        };
-        conflictService.getConflict = function () {
-            return expectedConflict;
-        };
-        
-        // create controller because the logic will be executed at initialization:
-        createController();
-        
-        expect(scope.Conflicts).toEqual([
-            { key: 'Equal', original: 'Text', requested: 'Text', hasConflict: false }
-        ]);
+        it('should hide Id and Etag property', function () {
+            var expectedConflict = {
+                original: { Equal: 'Text', Etag: '123', Id: 1 },
+                requested: { Equal: 'Text', Etag: '456', Id: 1 }
+            };
+            conflictService.getConflict = function () {
+                return expectedConflict;
+            };
+
+            // create controller because the logic will be executed at initialization:
+            createController();
+
+            expect(scope.Conflicts).toEqual([
+                { key: 'Equal', original: 'Text', requested: 'Text', hasConflict: false }
+            ]);
+        });
     });
 });
