@@ -13,6 +13,9 @@
         },
         getConflict: function(conflictNumber) {
             return conflicts[conflictNumber];
+        },
+        resolveConflict: function(conflictNumber) {
+            conflicts[conflictNumber] = undefined;
         }
     };
 });
