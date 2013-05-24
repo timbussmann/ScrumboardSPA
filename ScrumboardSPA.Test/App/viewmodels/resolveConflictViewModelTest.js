@@ -10,6 +10,7 @@ describe('resolve conflict Viewmodel', function() {
     var conflictService = {};
     var $routeParams = { conflictNumber: 42 };
     var notificationService = {};
+    var scrumboardService = {};
 
     function createController() {
         inject(function($rootScope, $controller) {
@@ -19,7 +20,8 @@ describe('resolve conflict Viewmodel', function() {
                 $routeParams: $routeParams,
                 conflictService: conflictService,
                 $location: location,
-                notificationService: notificationService
+                notificationService: notificationService,
+                scrumboardService: scrumboardService
             });
         });
     }
@@ -102,10 +104,10 @@ describe('resolve conflict Viewmodel', function() {
         });
 
         describe('when taking server version', function () {
-            beforeEach(function() {
+            beforeEach(function () {
                 spyOn(scope, '$broadcast');
                 conflictService.resolveConflict = jasmine.createSpy('resolveConflict');
-
+                
                 scope.TakeOriginal();
             });
 
@@ -119,6 +121,32 @@ describe('resolve conflict Viewmodel', function() {
             });
 
             it('should navigate to scrumboard', function() {
+                expect(location.url).toHaveBeenCalledWith('/scrumboard');
+            });
+        });
+        describe('when taking local version', function() {
+            beforeEach(function () {
+                spyOn(scope, '$broadcast');
+                conflictService.resolveConflict = jasmine.createSpy('resolveConflict');
+                scrumboardService.setStoryState = jasmine.createSpy('setStoryState');
+                
+                scope.TakeRequested();
+            });
+
+            it('should update server version with local changes', function() {
+                expect(scrumboardService.setStoryState).toHaveBeenCalledWith(conflict.original, conflict.requested.State);
+            });
+            
+            it('should publish StoryChanged event with requested version', function () {
+                expect(scope.$broadcast.mostRecentCall.args[0]).toBe('StoryChanged');
+                expect(scope.$broadcast.mostRecentCall.args[1]).toEqual(conflict.requested);
+            });
+            
+            it('should mark the conflict as resolved', function () {
+                expect(conflictService.resolveConflict).toHaveBeenCalledWith($routeParams.conflictNumber);
+            });
+
+            it('should navigate to scrumboard', function () {
                 expect(location.url).toHaveBeenCalledWith('/scrumboard');
             });
         });

@@ -1,6 +1,6 @@
 ﻿app.controller('resolveConflictViewModel',
-    ['$scope', '$routeParams', 'conflictService', '$location', 'notificationService',
-        function($scope, $routeParams, conflictService, $location, notificationService) {
+    ['$scope', '$routeParams', 'conflictService', '$location', 'notificationService', 'scrumboardService',
+        function($scope, $routeParams, conflictService, $location, notificationService, scrumboardService) {
 
             var conflictNr = $routeParams.conflictNumber;
             var conflict = conflictService.getConflict(conflictNr);
@@ -26,7 +26,14 @@
                 conflictService.resolveConflict(conflictNr);
 
                 $scope.$broadcast('StoryChanged', conflict.original);
+                $location.url('/scrumboard');
+            };
 
+            $scope.TakeRequested = function () {
+                scrumboardService.setStoryState(conflict.original, conflict.requested.State);
+                conflictService.resolveConflict(conflictNr);
+
+                $scope.$broadcast('StoryChanged', conflict.requested);
                 $location.url('/scrumboard');
             };
         }]);
