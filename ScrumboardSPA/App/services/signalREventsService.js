@@ -1,13 +1,20 @@
 ﻿app.service('signalREventsService', function () {
     
-    var eventListener = [];
+    var updatedEventListener = [];
+    var createdEventListener = [];
     
     // Proxy created on the fly          
     var hub = $.connection.storyHub;
 
     hub.client.updateStory = function (updatedStory) {
-        for (var i = 0; i < eventListener.length; i++) {
-            eventListener[i](updatedStory);
+        for (var i = 0; i < updatedEventListener.length; i++) {
+            updatedEventListener[i](updatedStory);
+        }
+    };
+    
+    hub.client.createStory = function (createdStory) {
+        for (var i = 0; i < createdEventListener.length; i++) {
+            createdEventListener[i](createdStory);
         }
     };
 
@@ -15,6 +22,10 @@
     $.connection.hub.start();
     
     this.registerUpdatedStoryEvent = function(callback) {
-        eventListener.push(callback);
+        updatedEventListener.push(callback);
+    };
+    
+    this.registerCreatedStoryEvent = function(callback) {
+        createdEventListener.push(callback);
     };
 });

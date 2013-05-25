@@ -34,7 +34,8 @@ describe('Scrumboard Viewmodel', function () {
     };
 
     var signalREventsService = {          
-        registerUpdatedStoryEvent: function (updateFunction) { this.registeredUpdateStoryFunction = updateFunction; }
+        registerUpdatedStoryEvent: function (updateFunction) { this.registeredUpdateStoryFunction = updateFunction; },
+        registerCreatedStoryEvent: function (createFunction) { this.registeredCreateStoryFunction = createFunction; }
     };
 
     beforeEach(function() {
@@ -77,31 +78,69 @@ describe('Scrumboard Viewmodel', function () {
         expect(location.url).toHaveBeenCalledWith('/story/' + storyId);
     });
 
-    it('should update story when updateStory is called on hub', function () {
-        var oldStory = { Id: 1, Title: 'old' };
-        var newStory = { Id: 1, Title: 'new' };
-        scope.Stories = [oldStory];
-        _ = {
-            findWhere: function () { return oldStory; },
-            indexOf: function () { return 0; }
-        };
+    describe('updateStory is called on hub', function() {
+        var newStory;
+        beforeEach(function () {
+            spyOn(notificationService, 'notifySuccess');
+            var oldStory = { Id: 1, Title: 'old' };
+            newStory = { Id: 1, Title: 'new', State: 'To Verify' };
+            scope.Stories = [oldStory];
+            _ = {
+                findWhere: function () { return oldStory; },
+                indexOf: function () { return 0; }
+            };
+
+            signalREventsService.registeredUpdateStoryFunction(newStory);
+            scrumboardService.storyCallback(newStory);
+        });
         
-        signalREventsService.registeredUpdateStoryFunction(newStory);
-        scrumboardService.storyCallback(newStory);
+        it('should update story', function () {
+            expect(scope.Stories[0]).toBe(newStory);
+        });
         
-        expect(scope.Stories[0]).toBe(newStory);
+        it('should notify success', function () {
+            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Moved story to "To Verify"');
+        });
     });
 
-    it('should set story state when UpdateStoryState called', function () {
-        spyOn(notificationService, 'notifySuccess');
-        var stories = [{ Title: 'story1', State: 'done', Id: 42 }];
-        scrumboardService.storiesCallback(stories);
+    describe('UpdateStoryState is called', function () {
+        var stories;
+        
+        beforeEach(function() {
+            spyOn(notificationService, 'notifySuccess');
+            stories = [{ Title: 'story1', State: 'done', Id: 42 }];
+            scrumboardService.storiesCallback(stories);
 
-        scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
+            scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
+        });
+        
+        it('should set story Id', function () {
+            expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
+        });
+        
+        it('should set story state to ToVerify', function () {
+            expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
+        });    
+    });
 
-        expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
-        expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
-        scrumboardService.setStoryStateCallback({ State: 'TestState', Id: 42 });
+    describe('createStory is called on hub', function () {
+        var newStory;
+        beforeEach(function () {
+            spyOn(notificationService, 'notifySuccess');
+            newStory = { Id: 1, Title: 'new', State: 'To Verify' };
+            scope.Stories = [];
+
+            signalREventsService.registeredCreateStoryFunction(newStory);
+            scrumboardService.storyCallback(newStory);
+        });
+
+        it('should create story', function () {
+            expect(scope.Stories[0]).toBe(newStory);
+        });       
+
+        it('should notify success', function () {
+            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Created story with state "To Verify"');
+        });
     });
 });
 

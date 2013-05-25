@@ -12,6 +12,15 @@
                         $scope.$apply();                      
                     });
                 });
+            
+            signalREventsService.registerCreatedStoryEvent(
+                function (createdStory) {
+                    scrumboardService.getStory(createdStory.Id, function(receivedStory) {
+                        $scope.Stories.push(receivedStory);
+                        notificationService.notifySuccess('Created story with state "' + receivedStory.State + '"');
+                        $scope.$apply();                      
+                    });
+                });
 
             scrumboardService.getStates(function(states) {
                 $scope.States = states;
