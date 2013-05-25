@@ -63,7 +63,7 @@
         {
             lock (this.lockObject)
             {
-                return userStories.Any() ? userStories.Max(s => s.Id) + 1 : 0;
+                return userStories.Any() ? userStories.Max(s => s.Id) + 1 : 1;
             }
         }
     }

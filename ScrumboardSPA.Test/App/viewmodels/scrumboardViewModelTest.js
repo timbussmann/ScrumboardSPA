@@ -8,7 +8,7 @@ describe('Scrumboard Viewmodel', function () {
 
     $ = { connection: { storyHub: { client: {} }, hub:{start: function() {}} } };
     
-    var scope;
+    var scope, rootScope;
     var scrumboardService = {
         getStates: function(callback) {
             this.statesCallback = callback;
@@ -19,8 +19,9 @@ describe('Scrumboard Viewmodel', function () {
         getStory: function (id, callback) {
             this.storyCallback = callback;
         },
-        setStoryState: function(storyId, newState, callback) {
-            this.setStoryStateCallback = callback;
+        setStoryState: function(storyId, newState, successCallback, errorCallback) {
+            this.setStoryStateSuccessCallback = successCallback;
+            this.setStoryStateErrorCallback = errorCallback;
             this.setStoryStateParameter = { StoryId: storyId, NewState: newState };
         }
     };
@@ -30,24 +31,25 @@ describe('Scrumboard Viewmodel', function () {
     };
 
     var notificationService = {
-        notifySuccess: function () { }
+        notifySuccess: function () { },
+        notifyError: function () { }
     };
 
-    var signalREventsService = {          
-        registerUpdatedStoryEvent: function (updateFunction) { this.registeredUpdateStoryFunction = updateFunction; },
-        registerCreatedStoryEvent: function (createFunction) { this.registeredCreateStoryFunction = createFunction; }
-    };
+    var signalREventsService = {};
+    var conflictService = {};
 
     beforeEach(function() {
         module('appModule');
-        inject(function($rootScope, $controller) {
+        inject(function ($rootScope, $controller) {
+            rootScope = $rootScope;
             scope = $rootScope.$new();
             $controller('scrumboardViewModel', {
                 $scope: scope,
                 scrumboardService: scrumboardService,
                 $location: location,
                 notificationService: notificationService,
-                signalREventsService: signalREventsService
+                signalREventsService: signalREventsService,
+                conflictService: conflictService
             });
         });
     });
@@ -90,7 +92,7 @@ describe('Scrumboard Viewmodel', function () {
                 indexOf: function () { return 0; }
             };
 
-            signalREventsService.registeredUpdateStoryFunction(newStory);
+            scope.$broadcast('UpdateSuccessful', newStory);
             scrumboardService.storyCallback(newStory);
         });
         
@@ -99,7 +101,7 @@ describe('Scrumboard Viewmodel', function () {
         });
         
         it('should notify success', function () {
-            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Moved story to "To Verify"');
+            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Updated story #"' + newStory.Id + '"');
         });
     });
 
@@ -130,7 +132,7 @@ describe('Scrumboard Viewmodel', function () {
             newStory = { Id: 1, Title: 'new', State: 'To Verify' };
             scope.Stories = [];
 
-            signalREventsService.registeredCreateStoryFunction(newStory);
+            scope.$broadcast('CreateSuccessful', newStory);
             scrumboardService.storyCallback(newStory);
         });
 
@@ -139,8 +141,22 @@ describe('Scrumboard Viewmodel', function () {
         });       
 
         it('should notify success', function () {
-            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Created story with state "To Verify"');
+            expect(notificationService.notifySuccess).toHaveBeenCalledWith(newStory.Title + ' - <a href="/story/' + newStory.Id + '">[click to see story]</a>', 'New Story created');
         });
+    });
+
+    it('should add merge conflict to conflicts and navigate to resolve view', function() {
+        var conflict = {
+            Original: 'The original',
+            Requested: 'The requested'
+        };
+        conflictService.addConflict = jasmine.createSpy('addConflict').andReturn(42);
+        spyOn(location, 'url');
+
+        rootScope.$broadcast('UpdateConflicted', conflict);
+
+        expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.Original, conflict.Requested);
+        expect(location.url).toHaveBeenCalledWith('/conflict/42');
     });
 });
 

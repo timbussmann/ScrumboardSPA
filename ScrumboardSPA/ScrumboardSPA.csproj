@@ -167,10 +167,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\appModule.js" />
+    <Content Include="App\services\conflictService.js" />
     <Content Include="App\services\notificationService.js" />
     <Content Include="App\services\scrumboardService.js" />
     <Content Include="App\services\signalREventsService.js" />
     <Content Include="App\viewmodels\newStoryViewModel.js" />
+    <Content Include="App\viewmodels\resolveConflictViewModel.js" />
     <Content Include="App\viewmodels\scrumboardViewModel.js" />
     <Content Include="App\viewmodels\storyDetailViewModel.js" />
     <Content Include="Content\bootstrap-responsive.css" />
@@ -524,6 +526,7 @@
     <Content Include="Views\Shared\ScrumboardView.cshtml" />
     <Content Include="Views\Shared\StoryDetailView.cshtml" />
     <Content Include="Views\Shared\NewStoryView.cshtml" />
+    <Content Include="Views\Shared\ResolveConflictView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

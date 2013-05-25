@@ -68,6 +68,5 @@ describe('new Story Viewmodel', function () {
         scrumboardService.createStorySuccessCallback({});
 
         expect(location.url).toHaveBeenCalledWith('/scrumboard');
-        expect(notificationService.notifySuccess).toHaveBeenCalled();
     });
 });

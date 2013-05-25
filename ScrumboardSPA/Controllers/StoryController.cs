@@ -87,7 +87,7 @@
 
             UserStory createdStory = this.storyRepository.AddNewStory(story);
             this.storyHubService.CreateStory(createdStory);
-            return Request.CreateResponse(HttpStatusCode.Created, createdStory);
+            return Request.CreateResponse(HttpStatusCode.Created);
         }
     }
 

@@ -1,11 +1,14 @@
 ﻿app.service('notificationService', function () {
-    
-    return {
-        notifySuccess: function (text, title) {
-            toastr.success(text, title);
-        },
-        notifyError: function (text, title) {
-            toastr.error(text, title);
-        }
+
+    this.notifySuccess = function(text, title) {
+        toastr.success(text, title);
+    };
+
+    this.notifyError = function(text, title) {
+        toastr.error(text, title);
+    };
+
+    this.notifyWarning = function(text, title) {
+        toastr.warning(text, title);
     };
 });

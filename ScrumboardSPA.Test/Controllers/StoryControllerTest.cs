@@ -123,7 +123,7 @@
         }
 
         [Test]
-        public void CreateStory_ShouldReturnCreatedStory()
+        public void CreateStory_ShouldReturnSuccess()
         {
             UserStory expectedUserStory = new UserStory(13);
             A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).Returns(expectedUserStory);
@@ -134,8 +134,6 @@
                                                                      });
 
             result.StatusCode.Should().Be(HttpStatusCode.Created);
-            UserStory createdStory = (UserStory)result.Content.As<ObjectContent>().Value;
-            createdStory.ShouldHave().AllProperties().EqualTo(expectedUserStory);
         }
 
         [Test]
