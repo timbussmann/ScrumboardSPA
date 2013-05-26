@@ -38,13 +38,19 @@
                 });
             });
             
-            $scope.$on('UpdateSuccessful', function(event, updatedStory) {
-                scrumboardService.getStory(updatedStory.Id, function (receivedStory) {
-                    var originalStory = _.findWhere($scope.Stories, { Id: receivedStory.Id });
+            $scope.$on('UpdateSuccessful', function(event, storyId) {
+                notificationService.notifySuccess('Updated story #' + storyId);
+            });
+
+            $scope.$on('StoryChanged', function(event, changedStory) {
+                var originalStory = _.findWhere($scope.Stories, { Id: changedStory.Id });
+                
+                // only update story if we have an older version
+                if (originalStory.Etag !== changedStory.Etag) {
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
-                    $scope.Stories[storyIndex] = receivedStory;
-                    notificationService.notifySuccess('Updated story #' + receivedStory.Id);
-                });
+                    $scope.Stories[storyIndex] = changedStory;
+                    notificationService.notifyInfo('Story #' + changedStory.Id + ' updated');
+                }
             });
 
             $scope.$on('UpdateConflicted', function(event, conflict) {

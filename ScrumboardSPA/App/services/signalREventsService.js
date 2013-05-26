@@ -5,7 +5,7 @@
     var hub = $.connection.storyHub;
 
     hub.client.updateStory = function (updatedStory) {
-        $rootScope.$broadcast('UpdateSuccessful', updatedStory);
+        $rootScope.$broadcast('StoryChanged', updatedStory);
     };
     
     hub.client.createStory = function (createdStory) {
