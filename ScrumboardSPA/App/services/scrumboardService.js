@@ -38,14 +38,15 @@
                     Etag: story.Etag,
                     State: state
                 }).success(function() {
+                    $rootScope.$broadcast('UpdateSuccessful', story.Id);
                 }).error(function(error, statusCode) {
-                        // Conflict:
-                        if (statusCode == 409) {
-                            $rootScope.$broadcast('UpdateConflicted', error);
-                        } else {
-                            $rootScope.$broadcast('UpdateFailed', statusCode);
-                        }
-                    });
+                    // Conflict:
+                    if (statusCode == 409) {
+                        $rootScope.$broadcast('UpdateConflicted', error);
+                    } else {
+                        $rootScope.$broadcast('UpdateFailed', statusCode);
+                    }
+                });
             };
             this.createStory = function(story, successCallback, errorCallback) {
                 $http.post('/api/story', story)
