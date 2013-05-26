@@ -72,7 +72,12 @@
             const int UpdatedStoryId = 99;
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
 
-            HttpResponseMessage result = this.testee.SetState(42, StoryState.WorkInProgress, Guid.NewGuid());
+            HttpResponseMessage result = this.testee.SetState(42,
+                                                              new SetStoryStateCommand
+                                                                  {
+                                                                      State = StoryState.WorkInProgress,
+                                                                      Etag = Guid.NewGuid()
+                                                                  });
 
             result.StatusCode.Should().Be(HttpStatusCode.OK);
         }
@@ -83,7 +88,12 @@
             const int UpdatedStoryId = 99;
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
 
-            HttpResponseMessage result = this.testee.SetState(42, StoryState.WorkInProgress, Guid.NewGuid());
+            HttpResponseMessage result = this.testee.SetState(42,
+                                                              new SetStoryStateCommand
+                                                                  {
+                                                                      State = StoryState.WorkInProgress,
+                                                                      Etag = Guid.NewGuid()
+                                                                  });
 
             A.CallTo(() => this.storyHubService.UpdateStory(A<UserStory>.That.Matches(us => us.Id == UpdatedStoryId))).MustHaveHappened(); 
         }
@@ -93,7 +103,12 @@
         {
             A.CallTo(() => this.storyRepository.GetStory(A<int>._)).Returns(null);
 
-            HttpResponseMessage result = this.testee.SetState(22, StoryState.WorkInProgress, Guid.NewGuid());
+            HttpResponseMessage result = this.testee.SetState(22,
+                                                              new SetStoryStateCommand
+                                                                  {
+                                                                      State = StoryState.WorkInProgress,
+                                                                      Etag = Guid.NewGuid()
+                                                                  });
 
             result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
@@ -106,7 +121,12 @@
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Throws(
                 new RepositoryConcurrencyException(original, requested));
 
-            HttpResponseMessage result = this.testee.SetState(22, StoryState.WorkInProgress, Guid.NewGuid());
+            HttpResponseMessage result = this.testee.SetState(22,
+                                                              new SetStoryStateCommand
+                                                                  {
+                                                                      State = StoryState.WorkInProgress,
+                                                                      Etag = Guid.NewGuid()
+                                                                  });
 
             result.StatusCode.Should().Be(HttpStatusCode.Conflict);
             var content = result.Content.As<ObjectContent>().Value.As<ConcurrencyErrorModel>();
@@ -117,9 +137,22 @@
         [Test]
         public void SetState_WhenEmtpyGuidProvided_ThenReturnValidationError()
         {
-            HttpResponseMessage result = this.testee.SetState(22, StoryState.WorkInProgress, new Guid());
+            HttpResponseMessage result = this.testee.SetState(22,
+                                                              new SetStoryStateCommand
+                                                                  {
+                                                                      State = StoryState.WorkInProgress,
+                                                                      Etag = Guid.Empty
+                                                                  });
 
             result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Test]
+        public void SetState_WhenInvalidRequestData_ThenReturnBadRequestCode()
+        {
+            HttpResponseMessage result = this.testee.SetState(22, null);
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Test]
