@@ -4,6 +4,7 @@ using System.Web;
 
 namespace ScrumboardSPA.Controllers
 {
+    using System;
     using System.IO;
     using System.Web.Mvc;
     using System.Web.Optimization;
@@ -13,24 +14,26 @@ namespace ScrumboardSPA.Controllers
     /// </summary>
     public class ManifestResult : FileResult
     {
-        private readonly string version;
         private readonly HttpServerUtilityBase server;
 
-        public ManifestResult(string version, HttpServerUtilityBase server) : base("text/cache-manifest")
+#if DEBUG
+        private static readonly string Version = Guid.NewGuid().ToString();
+#else
+        private static readonly string Version = "1.0";
+#endif
+
+        public ManifestResult(HttpServerUtilityBase server) : base("text/cache-manifest")
         {
-            this.version = version;
             this.server = server;
         }
 
         protected override void WriteFile(HttpResponseBase response)
         {
-
-            
             response.Output.WriteLine("CACHE MANIFEST");
 
             // Increase version number if any files listed in this manifest file has changed
-            response.Output.WriteLine("#v" + version);
-
+            response.Output.WriteLine("#v" + Version);
+            
             response.Output.WriteLine();
             response.Output.WriteLine("CACHE:");
 
