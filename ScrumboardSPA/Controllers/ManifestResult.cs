@@ -55,6 +55,7 @@ namespace ScrumboardSPA.Controllers
             response.Output.WriteLine("/views/NewStoryView");
             response.Output.WriteLine("/views/StoryDetailView");
             response.Output.WriteLine("/views/ScrumboardView");
+            response.Output.WriteLine("/views/ResolveConflictView");
 
             response.Output.WriteLine();
             response.Output.WriteLine("NETWORK:");
