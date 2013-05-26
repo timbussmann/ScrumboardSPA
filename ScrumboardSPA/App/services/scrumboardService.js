@@ -6,10 +6,29 @@
     this.getStates = function(callback) {
         $http.get('/api/stories/states', {
             cache: true
-        }).success(callback);
+        }).success(function(states) {
+            localStorage.states = JSON.stringify(states);
+            callback(states);
+        }).error(function(error, statusCode) {
+            if (statusCode == 0) {
+                // server not reachable, fetch from localstorage:
+                callback(JSON.parse(localStorage.states));
+            }
+        });
     };
     this.getStories = function(callback) {
-        $http.get('/api/stories').success(callback);
+        $http.get('/api/stories')
+            .success(function (stories) {
+                localStorage.stories = JSON.stringify(stories);
+                callback(stories);
+            })
+            .error(function(error, statusCode) {
+                if (statusCode == 0) {
+                    // server not reachable, fetch from localstorage:
+                    var storageStories = JSON.parse(localStorage.stories);
+                    callback(storageStories);
+                }
+            });
     };
     this.getStory = function(storyId, callback) {
         $http.get('/api/story/' + storyId).success(callback);
