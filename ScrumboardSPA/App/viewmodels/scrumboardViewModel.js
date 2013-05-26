@@ -43,7 +43,7 @@
                     var originalStory = _.findWhere($scope.Stories, { Id: receivedStory.Id });
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
                     $scope.Stories[storyIndex] = receivedStory;
-                    notificationService.notifySuccess('Updated story #"' + receivedStory.Id + '"');
+                    notificationService.notifySuccess('Updated story #' + receivedStory.Id);
                 });
             });
 
