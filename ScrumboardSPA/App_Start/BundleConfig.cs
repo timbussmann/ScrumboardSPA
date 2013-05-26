@@ -30,6 +30,9 @@ namespace ScrumboardSPA
             bundles.Add(new ScriptBundle("~/bundles/angularJs")
                 .Include("~/Scripts/angular.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/signalR")
+                .Include("~/Scripts/jquery.signalR-1.0.1.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/app")
                 .Include("~/App/appModule.js")
                 .IncludeDirectory("~/App/viewmodels", "*.js")

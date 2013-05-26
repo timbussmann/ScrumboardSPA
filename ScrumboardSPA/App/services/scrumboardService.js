@@ -36,9 +36,7 @@
     this.setStoryState = function(story, state) {
         $http.put('/api/story/' + story.Id + '/state/' + state,
             '"' + story.Etag + '"') // WebAPI requires single primitive datatypes as a string and not as json object
-            .success(function (data) {
-                notificationService.notifySuccess('Story #' + story.Id + ' updated');
-                $rootScope.$broadcast('UpdateSuccessful', data);
+            .success(function () {
             })
             .error(function (error, statusCode) {
                 // Conflict:

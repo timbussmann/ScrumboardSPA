@@ -1,6 +1,6 @@
 ﻿app.controller('scrumboardViewModel',
-    ['$scope', 'scrumboardService', '$location', 'notificationService', 'conflictService',
-        function($scope, scrumboardService, $location, notificationService, conflictService) {
+    ['$scope', 'scrumboardService', '$location', 'notificationService', 'signalREventsService', 'conflictService',
+        function($scope, scrumboardService, $location, notificationService, signalREventsService, conflictService) {
 
             scrumboardService.getStates(function(states) {
                 $scope.States = states;
@@ -27,11 +27,24 @@
                 scrumboardService.setStoryState(story, newState.State);
             };
 
+            $scope.$on('CreateSuccessful', function(event, createdStory) {
+                scrumboardService.getStory(createdStory.Id, function (receivedStory) {
+                    
+                    if (_.findWhere($scope.Stories, { Id: receivedStory.Id }) == undefined) {
+                        $scope.Stories.push(receivedStory);
+                    }                 
+
+                    notificationService.notifySuccess(createdStory.Title + ' - <a href="/story/' + createdStory.Id + '">[click to see story]</a>', 'New Story created');
+                });
+            });
+            
             $scope.$on('UpdateSuccessful', function(event, updatedStory) {
-                // replace the current story in on the scope with the updated one
-                var originalStory = _.findWhere($scope.Stories, { Id: updatedStory.Id });
-                var storyIndex = _.indexOf($scope.Stories, originalStory);
-                $scope.Stories[storyIndex] = updatedStory;
+                scrumboardService.getStory(updatedStory.Id, function (receivedStory) {
+                    var originalStory = _.findWhere($scope.Stories, { Id: receivedStory.Id });
+                    var storyIndex = _.indexOf($scope.Stories, originalStory);
+                    $scope.Stories[storyIndex] = receivedStory;
+                    notificationService.notifySuccess('Updated story #"' + receivedStory.Id + '"');
+                });
             });
 
             $scope.$on('UpdateConflicted', function(event, conflict) {

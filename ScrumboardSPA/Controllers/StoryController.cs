@@ -9,13 +9,20 @@
     using Data.Story;
     using Data.Story.State;
 
+    using Microsoft.AspNet.SignalR;
+
+    using ScrumboardSPA.Sockets;
+
     public class StoryController : ApiController
     {
         private readonly IStoryRepository storyRepository;
 
-        public StoryController(IStoryRepository storyRepository)
+        private readonly IStoryHubContextWrapper storyHubService;
+
+        public StoryController(IStoryRepository storyRepository, IStoryHubContextWrapper storyHubService)
         {
             this.storyRepository = storyRepository;
+            this.storyHubService = storyHubService;
         }
 
         [HttpGet]
@@ -51,12 +58,13 @@
                 story.State = state;
                 story.Etag = etag;
                 UserStory updatedStory = this.storyRepository.UpdateStory(story);
-                return this.Request.CreateResponse(HttpStatusCode.OK, updatedStory);
+                this.storyHubService.UpdateStory(updatedStory);
+                return this.Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (RepositoryConcurrencyException ex)
             {
                 return Request.CreateResponse(HttpStatusCode.Conflict,
-                                              new ConcurrencyErrorModel(){Original = ex.Original, Requested = ex.Requested});
+                                              new ConcurrencyErrorModel() { Original = ex.Original, Requested = ex.Requested});
             }
         }
 
@@ -78,7 +86,8 @@
                                   };
 
             UserStory createdStory = this.storyRepository.AddNewStory(story);
-            return Request.CreateResponse(HttpStatusCode.Created, createdStory);
+            this.storyHubService.CreateStory(createdStory);
+            return Request.CreateResponse(HttpStatusCode.Created);
         }
     }
 

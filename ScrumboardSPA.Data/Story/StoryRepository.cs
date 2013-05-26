@@ -29,7 +29,7 @@
                                   };
             
             this.userStories.Add(story);
-            return (UserStory) story.Clone();
+            return (UserStory)story.Clone();
         }
 
         public UserStory UpdateStory(UserStory story)
@@ -45,7 +45,7 @@
             UserStory newStory = new UserStory(story);
             this.userStories[index] = newStory;
 
-            return (UserStory) newStory.Clone();
+            return (UserStory)newStory.Clone();
         }
 
         public UserStory GetStory(int id)

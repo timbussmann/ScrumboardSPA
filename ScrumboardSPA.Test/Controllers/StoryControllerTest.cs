@@ -16,6 +16,8 @@
     using System;
     using System.Collections.Generic;
 
+    using ScrumboardSPA.Sockets;
+
     [TestFixture]
     class StoryControllerTest
     {
@@ -23,12 +25,15 @@
 
         private StoryController testee;
 
+        private IStoryHubContextWrapper storyHubService;
+
         [SetUp]
         public void SetUp()
         {
             this.storyRepository = A.Fake<IStoryRepository>();
+            this.storyHubService = A.Fake<IStoryHubContextWrapper>();
 
-            this.testee = new StoryController(this.storyRepository);
+            this.testee = new StoryController(this.storyRepository, this.storyHubService);
 
             SetupControllerForTests(testee);
         }
@@ -62,7 +67,7 @@
         }
 
         [Test]
-        public void SetState_WhenStoryExists_ThenReturnUpdatedStory()
+        public void SetState_WhenStoryExists_ThenReturnSuccess()
         {
             const int UpdatedStoryId = 99;
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
@@ -70,8 +75,17 @@
             HttpResponseMessage result = this.testee.SetState(42, StoryState.WorkInProgress, Guid.NewGuid());
 
             result.StatusCode.Should().Be(HttpStatusCode.OK);
-            var updatedStory = result.Content.As<ObjectContent>().Value.As<UserStory>();
-            updatedStory.Id.Should().Be(UpdatedStoryId);
+        }
+
+        [Test]
+        public void SetState_WhenStoryExists_ThenCallUpdateStoryOnService()
+        {
+            const int UpdatedStoryId = 99;
+            A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
+
+            HttpResponseMessage result = this.testee.SetState(42, StoryState.WorkInProgress, Guid.NewGuid());
+
+            A.CallTo(() => this.storyHubService.UpdateStory(A<UserStory>.That.Matches(us => us.Id == UpdatedStoryId))).MustHaveHappened(); 
         }
 
         [Test]
@@ -109,7 +123,7 @@
         }
 
         [Test]
-        public void CreateStory_ShouldReturnCreatedStory()
+        public void CreateStory_ShouldReturnSuccess()
         {
             UserStory expectedUserStory = new UserStory(13);
             A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).Returns(expectedUserStory);
@@ -120,8 +134,6 @@
                                                                      });
 
             result.StatusCode.Should().Be(HttpStatusCode.Created);
-            UserStory createdStory = (UserStory)result.Content.As<ObjectContent>().Value;
-            createdStory.ShouldHave().AllProperties().EqualTo(expectedUserStory);
         }
 
         [Test]
