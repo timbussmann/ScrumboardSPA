@@ -22,7 +22,10 @@
                 // we assume the update will be successful, so we already update
                 // the story for the ui. The story will be updated again after
                 // the success or error events have been received.
-                story.State = newState.State;
+                // receive the story from the scope. The parameter is a json deserialized story
+                // which will not trigger repaint of the original story
+                //var originalStory = _.findWhere($scope.Stories, { Id: story.Id });
+                //originalStory.State = newState.State;
 
                 scrumboardService.setStoryState(story, newState.State);
             };
@@ -62,5 +65,9 @@
 
             $scope.$on('UpdateFailed', function(event, statusCode) {
                 notificationService.notifyError('The server responded with a Statuscode ' + statusCode, 'Update failed');
+            });
+
+            $scope.$on('UsingCachedData', function(event) {
+                $scope.Offline = true;
             });
         }]);

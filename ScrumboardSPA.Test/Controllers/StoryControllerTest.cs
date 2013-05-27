@@ -15,8 +15,7 @@
     using ScrumboardSPA.Controllers;
     using System;
     using System.Collections.Generic;
-
-    using ScrumboardSPA.Sockets;
+    using Sockets;
 
     [TestFixture]
     class StoryControllerTest
@@ -144,7 +143,7 @@
                                                                       Etag = Guid.Empty
                                                                   });
 
-            result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Test]

@@ -42,13 +42,9 @@
         [ActionName("state")]
         public HttpResponseMessage SetState(int id, SetStoryStateCommand updateCommand)
         {
-            if (updateCommand == null)
+            if (updateCommand == null || updateCommand.Etag == Guid.Empty)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-            if (updateCommand.Etag == Guid.Empty)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "provide a valid etag (GUID) for the story");
             }
 
             UserStory story = this.storyRepository.GetStory(id);

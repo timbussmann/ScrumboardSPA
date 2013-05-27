@@ -26,6 +26,7 @@
                         if (statusCode == 0) {
                             // server not reachable, fetch from localstorage:
                             var storageStories = JSON.parse(localStorage.stories);
+                            $rootScope.$broadcast('UsingCachedData');
                             callback(storageStories);
                         }
                     });
