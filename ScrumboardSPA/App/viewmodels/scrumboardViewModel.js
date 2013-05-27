@@ -43,11 +43,12 @@
             $scope.$on('DeletedSuccessful', function(event, deletedStoryId) {
 
                 var story = _.findWhere($scope.Stories, { Id: deletedStoryId });
-                    if (story !== undefined){
-                        $scope.Stories.remove(story);
-                    }                 
+                if (story !== undefined) {
+                    var storyIndex = _.indexOf($scope.Stories, story);
+                        $scope.Stories.splice(storyIndex, 1);
+                    }
 
-                    notificationService.notifySuccess(createdStory.Title + ' - <a href="/story/' + createdStory.Id + '">[click to see story]</a>', 'New Story created');
+                    notificationService.notifySuccess(deletedStoryId + 'deleted');
             });
             
             $scope.$on('UpdateSuccessful', function(event, storyId) {

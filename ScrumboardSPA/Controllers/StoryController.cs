@@ -95,11 +95,13 @@
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpPost]
+        [ActionName("delete")]
         public HttpResponseMessage DeleteStory(int id)
         {
             if (this.storyRepository.DeleteStory(id))
             {
+                this.storyHubService.DeleteStory(id);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
 

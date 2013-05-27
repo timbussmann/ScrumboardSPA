@@ -54,4 +54,15 @@
                     .success(successCallback)
                     .error(errorCallback);
             };
+            this.deleteStory = function(story) {
+                $http.post('/api/story/' + story.Id + '/delete')
+                    .success().error(function (error, statusCode) {
+                        // Conflict:
+                        if (statusCode == 409) {
+                            $rootScope.$broadcast('UpdateConflicted', error);
+                        } else {
+                            $rootScope.$broadcast('UpdateFailed', statusCode);
+                        }
+                    });
+            };
         }]);

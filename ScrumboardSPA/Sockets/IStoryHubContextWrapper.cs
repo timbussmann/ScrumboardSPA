@@ -18,5 +18,7 @@
         /// </summary>
         /// <param name="createdStory">The created story.</param>
         void CreateStory(UserStory createdStory);
+
+        void DeleteStory(int deletedStoryId);
     }
 }

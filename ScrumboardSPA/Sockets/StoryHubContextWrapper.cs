@@ -17,5 +17,11 @@
             var context = GlobalHost.ConnectionManager.GetHubContext<StoryHub>();
             context.Clients.All.createStory(createdStory);
         }
+
+        public void DeleteStory(int deletedStoryId)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<StoryHub>();
+            context.Clients.All.deleteStory(deletedStoryId);
+        }
     }
 }

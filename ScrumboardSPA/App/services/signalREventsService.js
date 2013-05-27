@@ -14,6 +14,12 @@
     hub.client.createStory = function (createdStory) {
         $rootScope.$broadcast('CreateSuccessful', createdStory);
     };
+        
+    hub.client.deleteStory = function (deletedStoryId) {
+        $rootScope.$apply(function() {
+            $rootScope.$broadcast('DeletedSuccessful', deletedStoryId);
+        });
+    };
 
     // Start the connection
     $.connection.hub.start();

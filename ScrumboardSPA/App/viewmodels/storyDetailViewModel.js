@@ -1,6 +1,6 @@
 ﻿app.controller('storyDetailViewModel',
-    ['$scope', 'scrumboardService', '$routeParams', '$location',
-        function($scope, scrumboardService, $routeParams, $location) {
+    ['$scope', 'scrumboardService', '$routeParams', '$location', 'scrumboardService',
+        function($scope, scrumboardService, $routeParams, $location, $scrumboardService) {
             var storyId = $routeParams.storyId;
 
             scrumboardService.getStory(storyId, function(story) {
@@ -14,5 +14,9 @@
             $scope.CloseDetailView = function() {
                 $location.url('/scrumboard');
             };
-
+            
+            $scope.DeleteStory = function() {
+                $scrumboardService.deleteStory($scope.Story);
+                $location.url('/scrumboard');
+            };
         }]);
