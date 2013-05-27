@@ -238,11 +238,9 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\ScrumboardView.cshtml" />
     <Content Include="Views\Shared\StoryDetailView.cshtml" />
-    <None Include="Views\Shared\NewStoryView.cshtml" />
     <Content Include="Views\Shared\NewStoryView.cshtml" />
     <Content Include="Views\Shared\ResolveConflictView.cshtml" />
     <Content Include="Test\ScrumboardView.html" />
-    <None Include="Views\Shared\NewStoryView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
