@@ -54,9 +54,16 @@
 
             if (story != null)
             {
-                return (UserStory) story.Clone();
+                return (UserStory)story.Clone();
             }
+
             return null;
+        }
+
+        public bool DeleteStory(int id)
+        {
+            var story = this.userStories.SingleOrDefault(s => s.Id == id);
+            return this.userStories.Remove(story);
         }
 
         private int GetNewId()

@@ -89,6 +89,22 @@
             this.storyHubService.CreateStory(createdStory);
             return Request.CreateResponse(HttpStatusCode.Created);
         }
+
+        /// <summary>
+        /// Deletes the story.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        [HttpDelete]
+        public HttpResponseMessage DeleteStory(int id)
+        {
+            if (this.storyRepository.DeleteStory(id))
+            {
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.NotFound);
+        }
     }
 
     public class CreateUserStoryModel

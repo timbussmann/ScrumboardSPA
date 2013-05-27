@@ -11,5 +11,7 @@ namespace ScrumboardSPA.Data.Story
         UserStory UpdateStory(UserStory story);
 
         UserStory GetStory(int id);
+
+        bool DeleteStory(int id);
     }
 }

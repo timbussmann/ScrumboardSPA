@@ -171,6 +171,32 @@
             reloadedResult.State.Should().Be(expectedState);
         }
 
+        [Test]
+        public void DeleteStory_WhenStoryIsAdded_ThenShouldReturnTrue()
+        {
+            // Arrange
+            var addedStory = this.testee.AddNewStory(new NewUserStory { Title = "TestStory" });
+
+            // Act
+            var result = this.testee.DeleteStory(addedStory.Id);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void DeleteStory_WhenStoryIsNotAdded_ThenShouldReturnFalse()
+        {
+            // Arrange
+            var addedStory = this.testee.AddNewStory(new NewUserStory { Title = "TestStory" });
+
+            // Act
+            var result = this.testee.DeleteStory(addedStory.Id + 1);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
         //not exsits
         // reftest
 

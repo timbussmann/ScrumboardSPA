@@ -146,6 +146,34 @@
             A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).MustNotHaveHappened();
         }
 
+        [Test]
+        public void DeleteStory_WhenStoryDeletedSuccessful_ThenShouldReturnSuccess()
+        {
+            // Arrange
+            const int StoryId = 2;
+            A.CallTo(() => this.storyRepository.DeleteStory(A<int>.That.Matches(i => i == StoryId))).Returns(true);
+
+            // Act
+            var result = this.testee.DeleteStory(StoryId);
+
+            // Assert
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+        } 
+
+        [Test]
+        public void DeleteStory_WhenStoryDeletedNotSuccessful_ThenShouldReturnNotFound()
+        {
+            // Arrange
+            const int StoryId = 2;
+            A.CallTo(() => this.storyRepository.DeleteStory(A<int>.That.Matches(i => i == StoryId))).Returns(false);
+
+            // Act
+            var result = this.testee.DeleteStory(StoryId);
+
+            // Assert
+            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        } 
+
         private IEnumerable<UserStory> SetupStories(IEnumerable<UserStory> stories)
         {
             A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
