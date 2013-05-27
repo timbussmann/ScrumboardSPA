@@ -21,7 +21,10 @@
                 // we assume the update will be successful, so we already update
                 // the story for the ui. The story will be updated again after
                 // the success or error events have been received.
-                story.State = newState.State;
+                // receive the story from the scope. The parameter is a json deserialized story
+                // which will not trigger repaint of the original story
+                //var originalStory = _.findWhere($scope.Stories, { Id: story.Id });
+                //originalStory.State = newState.State;
 
                 scrumboardService.setStoryState(story, newState.State);
             };
@@ -47,13 +50,19 @@
                     notificationService.notifySuccess(createdStory.Title + ' - <a href="/story/' + createdStory.Id + '">[click to see story]</a>', 'New Story created');
             });
             
-            $scope.$on('UpdateSuccessful', function(event, updatedStory) {
-                scrumboardService.getStory(updatedStory.Id, function (receivedStory) {
-                    var originalStory = _.findWhere($scope.Stories, { Id: receivedStory.Id });
+            $scope.$on('UpdateSuccessful', function(event, storyId) {
+                notificationService.notifySuccess('Updated story #' + storyId);
+            });
+
+            $scope.$on('StoryChanged', function(event, changedStory) {
+                var originalStory = _.findWhere($scope.Stories, { Id: changedStory.Id });
+                
+                // only update story if we have an older version
+                if (originalStory.Etag !== changedStory.Etag) {
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
-                    $scope.Stories[storyIndex] = receivedStory;
-                    notificationService.notifySuccess('Updated story #"' + receivedStory.Id + '"');
-                });
+                    $scope.Stories[storyIndex] = changedStory;
+                    notificationService.notifyInfo('Story #' + changedStory.Id + ' updated');
+                }
             });
 
             $scope.$on('UpdateConflicted', function(event, conflict) {
@@ -65,5 +74,9 @@
 
             $scope.$on('UpdateFailed', function(event, statusCode) {
                 notificationService.notifyError('The server responded with a Statuscode ' + statusCode, 'Update failed');
+            });
+
+            $scope.$on('UsingCachedData', function(event) {
+                $scope.Offline = true;
             });
         }]);

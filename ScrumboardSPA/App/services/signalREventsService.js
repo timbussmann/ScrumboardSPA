@@ -5,7 +5,10 @@
     var hub = $.connection.storyHub;
 
     hub.client.updateStory = function (updatedStory) {
-        $rootScope.$broadcast('UpdateSuccessful', updatedStory);
+        // execute within apply because signalR does not run within angular scopes
+        $rootScope.$apply(function() {
+            $rootScope.$broadcast('StoryChanged', updatedStory);
+        });
     };
     
     hub.client.createStory = function (createdStory) {

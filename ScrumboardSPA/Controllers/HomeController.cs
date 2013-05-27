@@ -13,5 +13,11 @@
         {
             return View(viewName);
         }
+
+        [ActionName("GetCacheManifest")]
+        public ManifestResult GetCacheManifest()
+        {
+            return new ManifestResult(Server);
+        }
     }
 }

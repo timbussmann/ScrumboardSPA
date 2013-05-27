@@ -40,11 +40,11 @@
 
         [HttpPut]
         [ActionName("state")]
-        public HttpResponseMessage SetState(int id, StoryState state, [FromBody]Guid etag)
+        public HttpResponseMessage SetState(int id, SetStoryStateCommand updateCommand)
         {
-            if (etag == Guid.Empty)
+            if (updateCommand == null || updateCommand.Etag == Guid.Empty)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "provide a valid etag (GUID) for the story");
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             UserStory story = this.storyRepository.GetStory(id);
@@ -55,8 +55,8 @@
 
             try
             {
-                story.State = state;
-                story.Etag = etag;
+                story.State = updateCommand.State;
+                story.Etag = updateCommand.Etag;
                 UserStory updatedStory = this.storyRepository.UpdateStory(story);
                 this.storyHubService.UpdateStory(updatedStory);
                 return this.Request.CreateResponse(HttpStatusCode.OK);
@@ -120,5 +120,11 @@
     {
         public UserStory Original { get; set; }
         public UserStory Requested { get; set; }
+    }
+
+    public class SetStoryStateCommand
+    {
+        public StoryState State { get; set; }
+        public Guid Etag { get; set; }
     }
 }
