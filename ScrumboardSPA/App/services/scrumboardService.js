@@ -32,7 +32,17 @@
                     });
             };
             this.getStory = function(storyId, callback) {
-                $http.get('/api/story/' + storyId).success(callback);
+                $http.get('/api/story/' + storyId)
+                    .success(callback)
+                    .error(function(error, statusCode) {
+                        if (statusCode == 0) {
+                            var cachedStories = JSON.parse(localStorage.stories);
+                            var cachedStory = _.findWhere(cachedStories, { Id: +storyId });
+                            if (cachedStory) {
+                                callback(cachedStory);
+                            }
+                        }
+                    });
             };
             this.setStoryState = function(story, state) {
                 $http.put('/api/story/' + story.Id + '/state/', {
