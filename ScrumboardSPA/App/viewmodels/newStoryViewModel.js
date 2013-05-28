@@ -1,6 +1,6 @@
 ﻿app.controller('newStoryViewModel',
-    ['$scope', 'scrumboardService', '$location', 'notificationService',
-        function ($scope, scrumboardService, $location, notificationService) {
+    ['$scope', 'scrumboardService', '$location',
+        function ($scope, scrumboardService, $location) {
 
             $scope.Story = {};
             $scope.ShowErrors = false;
@@ -15,8 +15,13 @@
                     $scope.Story = {};
                     scrumboardService.createStory(story, function (createdStory) {
                         $location.url('/scrumboard');
-                    }, function (error) {
-                        $scope.ServerError = error;
+                    }, function (error, statusCode) {
+                        if (error && error.Message) {
+                            // Web API error:
+                            $scope.ServerError = statusCode + ': ' + error.Message;
+                        } else {
+                            $scope.ServerError = 'HTTP Code ' + statusCode;
+                        }
                     });
                 }
             };
