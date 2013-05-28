@@ -1,6 +1,6 @@
 ﻿app.service('scrumboardService',
-    ['$http', '$rootScope', 'notificationService',
-        function($http, $rootScope, notificationService) {
+    ['$http', '$rootScope',
+        function($http, $rootScope) {
             // angular services expect a constructor function. for a module pattern style way, look at angular factory
 
             this.getStates = function(callback) {
