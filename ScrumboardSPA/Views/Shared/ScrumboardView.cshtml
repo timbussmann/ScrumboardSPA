@@ -1,7 +1,7 @@
 ﻿<div id="scrumboard">
     <div class="alert" data-ng-show="Offline">You are working with cached data in offline mode.</div>
     <input type="text" placeholder="filter by story title" data-ng-model="storyFilter.Title"/>
-    <table class="table table-bordered">
+    <table class="table table-bordered" data-ng-show="Stories">
         <thead>
             <tr>
                 <th data-ng-repeat="state in States" data-ng-style="{ width: (100 / States.length) + '%'}">{{state.Name}}</th>
@@ -24,4 +24,5 @@
             </tr>
         </tbody>
     </table>
+    <div class="alert alert-info text-center" data-ng-hide="Stories">loading stories...</div>
 </div>
