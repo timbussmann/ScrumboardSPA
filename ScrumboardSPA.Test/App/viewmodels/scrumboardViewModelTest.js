@@ -104,6 +104,28 @@ describe('Scrumboard Viewmodel', function () {
             expect(notificationService.notifySuccess).toHaveBeenCalledWith('Updated story #"' + newStory.Id + '"');
         });
     });
+    
+    describe('deleteStory is called on hub', function() {
+        beforeEach(function () {
+            spyOn(notificationService, 'notifySuccess');
+            var story = { Id: 1, Title: 'old' };
+            scope.Stories = [story];
+            _ = {
+                findWhere: function () { return story; },
+                indexOf: function () { return 0; }
+            };
+
+            scope.$broadcast('DeletedSuccessful', 1);
+        });
+        
+        it('should update story', function () {
+            expect(scope.Stories.length).toBe(0);
+        });
+        
+        it('should notify success', function () {
+            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Story old deleted');
+        });
+    });
 
     describe('UpdateStoryState is called', function () {
         var stories;

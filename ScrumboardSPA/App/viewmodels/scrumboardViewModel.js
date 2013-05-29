@@ -44,11 +44,10 @@
 
                 var story = _.findWhere($scope.Stories, { Id: deletedStoryId });
                 if (story !== undefined) {
+                    notificationService.notifySuccess('Story ' + story.Title + ' deleted');
                     var storyIndex = _.indexOf($scope.Stories, story);
-                        $scope.Stories.splice(storyIndex, 1);
-                    }
-
-                    notificationService.notifySuccess(deletedStoryId + 'deleted');
+                    $scope.Stories.splice(storyIndex, 1);
+                }
             });
             
             $scope.$on('UpdateSuccessful', function(event, storyId) {

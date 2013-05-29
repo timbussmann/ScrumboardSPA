@@ -13,7 +13,8 @@ describe('Story Detail Viewmodel', function () {
             }
         },
         getStates: function() {
-        }
+        },
+        deleteStory: function(story) {}
     };
     var location = {
         url: function (){}
@@ -42,6 +43,33 @@ describe('Story Detail Viewmodel', function () {
         expect(scope.Story).toBe(expectedStory);
     });
 
+    it('navigate to scrumboard on CloseDetailView', function() {
+        spyOn(location, 'url');
+
+        scope.CloseDetailView();
+
+        expect(location.url).toHaveBeenCalledWith('/scrumboard');
+    });
+
+    describe('Delete Story', function () {
+        var expectedStory = {
+            Title: 'A Story'
+        };
+        beforeEach(function() {
+            spyOn(location, 'url');
+            spyOn(scrumboardService, 'deleteStory');
+            scope.Story = expectedStory;
+            scope.DeleteStory();
+        });
+        
+        it('should navigate to scrumboard', function () {
+            expect(scrumboardService.deleteStory).toHaveBeenCalledWith(expectedStory);
+        });
+        
+        it('should navigate to scrumboard', function () {
+            expect(location.url).toHaveBeenCalledWith('/scrumboard');
+        });
+    });
     it('navigate to scrumboard on CloseDetailView', function() {
         spyOn(location, 'url');
 
