@@ -2,7 +2,7 @@
     <h3>Create new User Story:</h3>
     <div class="alert alert-error" data-ng-Show="ServerError">
         <h4>Error:</h4>
-        {{ServerError.Message}}
+        {{ServerError}}
     </div>
     <form class="form-horizontal" name="newStoryForm">
         <div class="control-group" data-ng-class="{error: ShowErrors == true && !newStoryForm.storyTitle.$valid}">

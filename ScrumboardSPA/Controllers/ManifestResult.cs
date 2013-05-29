@@ -52,7 +52,6 @@ namespace ScrumboardSPA.Controllers
             // which does not correspond to the file location (.cshtml ending).
             // a solution would be to keep these views as html files in a sepperate directory and not
             // delivering them via controller.
-            response.Output.WriteLine("/views/NewStoryView");
             response.Output.WriteLine("/views/StoryDetailView");
             response.Output.WriteLine("/views/ScrumboardView");
             response.Output.WriteLine("/views/ResolveConflictView");
@@ -60,6 +59,10 @@ namespace ScrumboardSPA.Controllers
             response.Output.WriteLine();
             response.Output.WriteLine("NETWORK:");
             response.Output.WriteLine("*");
+
+            response.Output.WriteLine();
+            response.Output.WriteLine("FALLBACK:");
+            response.Output.WriteLine("/views/NewStoryView /views/OfflineView");
         }
 
         private IEnumerable<string> GetFilesIn(string directory)
