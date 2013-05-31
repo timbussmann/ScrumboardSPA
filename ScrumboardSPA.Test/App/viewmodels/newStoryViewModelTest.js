@@ -10,6 +10,7 @@ describe('new Story Viewmodel', function () {
         createStory: function (story, successCallback, errorCallback) {
             scrumboardService.createdStory = story;
             this.createStorySuccessCallback = successCallback;
+            this.createStoryErrorCallback = errorCallback;
         }
     };
     var location = {
@@ -33,40 +34,66 @@ describe('new Story Viewmodel', function () {
         });
     });
 
-    it('should show validation errors when form is not valid', function () {
-        spyOn(scrumboardService, 'createStory');
-        scope.newStoryForm = {
-            $invalid: true
-        };
+    describe('when invalid user inputs', function () {
+        beforeEach(function() {
+            spyOn(scrumboardService, 'createStory');
+            
+            scope.newStoryForm = {
+                $invalid: true
+            };
+            
+            scope.CreateStory();
+        });
+        
+        it('should show validation errors', function() {
+            expect(scope.ShowErrors).toBe(true);
+        });
 
-        scope.CreateStory();
-
-        expect(scope.ShowErrors).toBe(true);
-        expect(scrumboardService.createStory).wasNotCalled();
+        it('should not create a story', function() {
+            expect(scrumboardService.createStory).wasNotCalled();
+        });
     });
 
-    it('should create story when inputs are valid', function () {
-        scope.newStoryForm = {
-            $invalid: false
-        };
+    describe('when valid user inputs', function () {
+        
         var expectedStory = { Title: 'MyNewStory' };
-        scope.Story = expectedStory;
+        
+        beforeEach(function() {
+            scope.newStoryForm = {
+                $invalid: false
+            };
+            
+            scope.Story = expectedStory;
 
-        scope.CreateStory();
+            scope.CreateStory();
+        });
 
-        expect(scrumboardService.createdStory).toBe(expectedStory);
-    });
+        it('should create user story', function() {
+            expect(scrumboardService.createdStory).toBe(expectedStory);
+        });
 
-    it('should navigate to scrumboard on successful creation', function () {
-        spyOn(location, 'url');
-        spyOn(notificationService, 'notifySuccess');
-        scope.newStoryForm = { $invalid: false };
-        var expectedStory = { Title: 'MyNewStory' };
-        scope.Story = expectedStory;
-        scope.CreateStory();
+        describe('and user story was created', function() {
+            beforeEach(function() {
+                spyOn(location, 'url');
+                
+                scrumboardService.createStorySuccessCallback({});
+            });
 
-        scrumboardService.createStorySuccessCallback({});
+            it('should navigate to scrumboard', function() {
+                expect(location.url).toHaveBeenCalledWith('/scrumboard');
+            });
+        });
 
-        expect(location.url).toHaveBeenCalledWith('/scrumboard');
+        describe('and error occured on creation', function() {
+            beforeEach(function() {
+
+                scrumboardService.createStoryErrorCallback({ Message: 'an error' }, 42);
+            });
+
+            it('should show error message', function() {
+                expect(scope.ServerError).toContain('an error');
+                expect(scope.ServerError).toContain('42');
+            });
+        });
     });
 });
