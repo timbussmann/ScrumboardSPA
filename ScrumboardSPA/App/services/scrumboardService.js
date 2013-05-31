@@ -65,7 +65,7 @@
                     .error(errorCallback);
             };
             this.deleteStory = function(story) {
-                $http.post('/api/story/' + story.Id + '/delete')
+                $http.delete('/api/story/' + story.Id)
                     .success().error(function (error, statusCode) {
                         // Conflict:
                         if (statusCode == 409) {

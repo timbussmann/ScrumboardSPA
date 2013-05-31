@@ -95,7 +95,7 @@
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpDelete]
         [ActionName("delete")]
         public HttpResponseMessage DeleteStory(int id)
         {
