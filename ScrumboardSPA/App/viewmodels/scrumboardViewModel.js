@@ -49,10 +49,6 @@
                     $scope.Stories.splice(storyIndex, 1);
                 }
             });
-            
-            $scope.$on('UpdateSuccessful', function(event, storyId) {
-                notificationService.notifySuccess('Updated story #' + storyId);
-            });
 
             $scope.$on('StoryChanged', function(event, changedStory) {
                 var originalStory = _.findWhere($scope.Stories, { Id: changedStory.Id });
@@ -61,7 +57,7 @@
                 if (originalStory.Etag !== changedStory.Etag) {
                     var storyIndex = _.indexOf($scope.Stories, originalStory);
                     $scope.Stories[storyIndex] = changedStory;
-                    notificationService.notifyInfo('Story #' + changedStory.Id + ' updated');
+                    notificationService.notifySuccess('Updated story #' + changedStory.Id);
                 }
             });
 
