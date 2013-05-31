@@ -1,6 +1,7 @@
 ﻿app.controller('scrumboardViewModel',
     ['$scope', 'scrumboardService', '$location', 'notificationService', 'signalREventsService', 'conflictService',
-        function($scope, scrumboardService, $location, notificationService, signalREventsService, conflictService) {
+        function ($scope, scrumboardService, $location, notificationService, signalREventsService, conflictService) {
+           
             scrumboardService.getStates(function(states) {
                 $scope.States = states;
             });
@@ -29,12 +30,12 @@
                 scrumboardService.setStoryState(story, newState.State);
             };
 
-            $scope.$on('CreateSuccessful', function(event, createdStory) {
+            $scope.$on('CreateSuccessful', function (event, createdStory) {
                 scrumboardService.getStory(createdStory.Id, function (receivedStory) {
                     
                     if (_.findWhere($scope.Stories, { Id: receivedStory.Id }) === undefined) {
                         $scope.Stories.push(receivedStory);
-                    }                 
+                    }
 
                     notificationService.notifySuccess(createdStory.Title + ' - <a href="/story/' + createdStory.Id + '">[click to see story]</a>', 'New Story created');
                 });
@@ -44,9 +45,10 @@
 
                 var story = _.findWhere($scope.Stories, { Id: deletedStoryId });
                 if (story !== undefined) {
-                    notificationService.notifySuccess('Story ' + story.Title + ' deleted');
                     var storyIndex = _.indexOf($scope.Stories, story);
                     $scope.Stories.splice(storyIndex, 1);
+                    
+                    notificationService.notifyInfo('Story #' + story.Id + ' deleted');
                 }
             });
 

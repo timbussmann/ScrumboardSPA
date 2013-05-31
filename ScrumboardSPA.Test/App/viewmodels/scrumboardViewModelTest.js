@@ -6,8 +6,6 @@
 /// <reference path="../../../scrumboardspa/app/viewmodels/scrumboardviewmodel.js" />
 describe('Scrumboard Viewmodel', function () {
 
-    $ = { connection: { storyHub: { client: {} }, hub:{start: function() {}} } };
-    
     var scope, rootScope;
     var scrumboardService = {
         getStates: function(callback) {
@@ -22,7 +20,6 @@ describe('Scrumboard Viewmodel', function () {
         setStoryState: function(storyId, newState, successCallback, errorCallback) {
             this.setStoryStateSuccessCallback = successCallback;
             this.setStoryStateErrorCallback = errorCallback;
-            this.setStoryStateParameter = { StoryId: storyId, NewState: newState };
         }
     };
 
@@ -32,17 +29,17 @@ describe('Scrumboard Viewmodel', function () {
 
     var notificationService = {
         notifySuccess: function () { },
-        notifyError: function () { }
+        notifyError: function () { },
+        notifyInfo: function () { }
     };
 
     var signalREventsService = {};
     var conflictService = {};
 
-    beforeEach(function() {
-        module('appModule');
+    function createController() {
         inject(function ($rootScope, $controller) {
-            rootScope = $rootScope;
             scope = $rootScope.$new();
+            rootScope = $rootScope;
             $controller('scrumboardViewModel', {
                 $scope: scope,
                 scrumboardService: scrumboardService,
@@ -52,133 +49,174 @@ describe('Scrumboard Viewmodel', function () {
                 conflictService: conflictService
             });
         });
-    });
+    }
 
-    it('should show states from scrumboard service', function () {
-        scrumboardService.statesCallback(['state1', 'state2']);
+    beforeEach(function() {
+        module('appModule');
         
-        expect(scope.States.length).toBe(2);
-        expect(scope.States[1]).toBe('state2');
+        spyOn(notificationService, 'notifySuccess');
+        spyOn(notificationService, 'notifyInfo');
+
+        spyOn(location, 'url');
     });
 
-    it('should show all retrieved stories', function() {
+    describe('on initialization', function () {
+        var states = ['state1', 'state2'];
         var stories = ['story1', 'story2', 'story3'];
-        scrumboardService.storiesCallback(stories);
-
-        expect(scope.Stories.length).toBe(3);
-        angular.forEach(stories, function(story) {
-            expect(scope.Stories).toContain(story);
-        });
-    });
-
-    it('should navigate to story detail page when ShowStoryDetail clicked', function () {
-        var storyId = 11;
-        spyOn(location, 'url');
         
-        scope.ShowStoryDetail(storyId);
-
-        expect(location.url).toHaveBeenCalledWith('/story/' + storyId);
-    });
-
-    describe('updateStory is called on hub', function() {
-        var newStory;
         beforeEach(function () {
-            spyOn(notificationService, 'notifySuccess');
-            var oldStory = { Id: 1, Title: 'old' };
-            newStory = { Id: 1, Title: 'new', State: 'To Verify' };
-            scope.Stories = [oldStory];
-            _ = {
-                findWhere: function () { return oldStory; },
-                indexOf: function () { return 0; }
-            };
+            spyOn(scrumboardService, 'getStates').andCallFake(function(callback) {
+                callback(states);
+            });
+            spyOn(scrumboardService, 'getStories').andCallFake(function(callback) {
+                callback(stories);
+            });
+            
+            createController();
+        });
 
-            scope.$broadcast('UpdateSuccessful', newStory);
-            scrumboardService.storyCallback(newStory);
+        it('should show states from scrumboard service', function () {
+            expect(scrumboardService.getStories).toHaveBeenCalled();
+            expect(scope.States.length).toBe(2);
+            expect(scope.States).toEqual(states);
         });
-        
-        it('should update story', function () {
-            expect(scope.Stories[0]).toBe(newStory);
-        });
-        
-        it('should notify success', function () {
-            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Updated story #"' + newStory.Id + '"');
-        });
-    });
-    
-    describe('deleteStory is called on hub', function() {
-        beforeEach(function () {
-            spyOn(notificationService, 'notifySuccess');
-            var story = { Id: 1, Title: 'old' };
-            scope.Stories = [story];
-            _ = {
-                findWhere: function () { return story; },
-                indexOf: function () { return 0; }
-            };
 
-            scope.$broadcast('DeletedSuccessful', 1);
-        });
-        
-        it('should update story', function () {
-            expect(scope.Stories.length).toBe(0);
-        });
-        
-        it('should notify success', function () {
-            expect(notificationService.notifySuccess).toHaveBeenCalledWith('Story old deleted');
+        it('should show all retrieved stories', function () {
+            expect(scope.Stories.length).toBe(3);
+            expect(scope.Stories).toEqual(stories);
         });
     });
 
-    describe('UpdateStoryState is called', function () {
-        var stories;
-        
+    describe('after initialization', function () {
         beforeEach(function() {
-            spyOn(notificationService, 'notifySuccess');
-            stories = [{ Title: 'story1', State: 'done', Id: 42 }];
-            scrumboardService.storiesCallback(stories);
-
-            scope.UpdateStoryState(stories[0], { State: 'ToVerify' });
+            createController();
         });
         
-        it('should set story Id', function () {
-            expect(scrumboardService.setStoryStateParameter.StoryId).toBe(stories[0]);
-        });
-        
-        it('should set story state to ToVerify', function () {
-            expect(scrumboardService.setStoryStateParameter.NewState).toBe('ToVerify');
-        });    
-    });
+        describe('when story selected', function () {
+            var storyId = 11;
 
-    describe('createStory is called on hub', function () {
-        var newStory;
-        beforeEach(function () {
-            spyOn(notificationService, 'notifySuccess');
-            newStory = { Id: 1, Title: 'new', State: 'To Verify' };
-            scope.Stories = [];
+            beforeEach(function () {
+                scope.ShowStoryDetail(storyId);
+            });
 
-            scope.$broadcast('CreateSuccessful', newStory);
-            scrumboardService.storyCallback(newStory);
+            it('should navigate to story detail page', function () {
+                expect(location.url).toHaveBeenCalledWith('/story/' + storyId);
+            });
         });
 
-        it('should create story', function () {
-            expect(scope.Stories[0]).toBe(newStory);
-        });       
+        describe('on story changed event', function () {
+            var oldStory = { Id: 1, Title: 'old', Etag: 1 };
+            var newStory = { Id: 1, Title: 'new', State: 'To Verify', Etag: 2 };
+            beforeEach(function () {
+                spyOn(scrumboardService, 'getStory').andCallFake(function (id, callback) {
+                    callback(newStory);
+                });
 
-        it('should notify success', function () {
-            expect(notificationService.notifySuccess).toHaveBeenCalledWith(newStory.Title + ' - <a href="/story/' + newStory.Id + '">[click to see story]</a>', 'New Story created');
+                scope.Stories = [oldStory];
+
+                scope.$broadcast('StoryChanged', newStory);
+            });
+
+            it('should update story', function () {
+                expect(scope.Stories[0]).toBe(newStory);
+            });
+
+            it('should notify success', function () {
+                expect(notificationService.notifySuccess).toHaveBeenCalledWith('Updated story #' + newStory.Id);
+            });
         });
-    });
 
-    it('should add merge conflict to conflicts and navigate to resolve view', function() {
-        var conflict = {
-            Original: 'The original',
-            Requested: 'The requested'
-        };
-        conflictService.addConflict = jasmine.createSpy('addConflict').andReturn(42);
-        spyOn(location, 'url');
+        describe('on story deleted event', function () {
+            var story = { Id: 1, Title: 'old' };
 
-        rootScope.$broadcast('UpdateConflicted', conflict);
+            beforeEach(function () {
+                scope.Stories = [story];
 
-        expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.Original, conflict.Requested);
-        expect(location.url).toHaveBeenCalledWith('/conflict/42');
+                scope.$broadcast('DeletedSuccessful', story.Id);
+            });
+
+            it('should remove the story from the board', function () {
+                expect(scope.Stories.length).toBe(0);
+            });
+
+            it('should add a notification', function () {
+                expect(notificationService.notifyInfo).toHaveBeenCalledWith('Story #' + story.Id + ' deleted');
+            });
+        });
+
+        describe('when story has been moved to new state', function () {
+            var stories = [{ Title: 'story1', State: 'done', Id: 42 }];
+            var newState = { State: 'ToVerify' };
+
+            beforeEach(function () {
+                scope.Stories = stories;
+
+                spyOn(scrumboardService, 'setStoryState');
+            });
+
+            describe('when new state is not equal to current state', function () {
+                beforeEach(function () {
+                    scope.UpdateStoryState(stories[0], newState);
+                });
+
+                it('should update the state', function () {
+                    expect(scrumboardService.setStoryState).toHaveBeenCalledWith(stories[0], newState.State);
+                });
+            });
+
+            describe('when new state is equal to current state', function () {
+                beforeEach(function () {
+                    newState = { State: 'done' };
+                    scope.UpdateStoryState(stories[0], newState);
+                });
+
+                it('should not update the state', function () {
+                    expect(scrumboardService.setStoryState).not.toHaveBeenCalled();
+                });
+            });
+        });
+
+        describe('on new story event', function () {
+            var newStory = { Id: 1, Title: 'new', State: 'To Verify' };
+            beforeEach(function () {
+                spyOn(scrumboardService, 'getStory').andCallFake(function (id, callback) {
+                    callback(newStory);
+                });
+                scope.Stories = [];
+
+                scope.$broadcast('CreateSuccessful', newStory);
+            });
+
+
+            it('should create story', function () {
+                expect(scope.Stories[0]).toBe(newStory);
+            });
+
+            it('should notify creation', function () {
+                expect(notificationService.notifySuccess).toHaveBeenCalledWith(newStory.Title + ' - <a href="/story/' + newStory.Id + '">[click to see story]</a>', 'New Story created');
+            });
+        });
+
+        describe('on merge conflict', function () {
+            var conflict = {
+                Original: 'The original',
+                Requested: 'The requested'
+            };
+
+            beforeEach(function () {
+                conflictService.addConflict = jasmine.createSpy('addConflict').andReturn(42);
+
+                rootScope.$broadcast('UpdateConflicted', conflict);
+            });
+
+            it('should add conflict to conflicts', function () {
+                expect(conflictService.addConflict).toHaveBeenCalledWith(conflict.Original, conflict.Requested);
+            });
+
+            it('should navigate to resolve conflict view', function () {
+                expect(location.url).toHaveBeenCalledWith('/conflict/42');
+            });
+        });
     });
 });
 
