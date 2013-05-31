@@ -12,9 +12,7 @@ describe('Story Detail Viewmodel', function () {
                 this.storyCallback = callback;
             }
         },
-        getStates: function() {
-        },
-        deleteStory: function(story) {}
+        getStates: function() {}
     };
     var location = {
         url: function (){}
@@ -33,48 +31,36 @@ describe('Story Detail Viewmodel', function () {
         });
     });
 
-    it('should load selected story', function () {
-        var expectedStory = {
-            Title: 'A Story'
-        };
-
-        scrumboardService.storyCallback(expectedStory);
-
-        expect(scope.Story).toBe(expectedStory);
-    });
-
-    it('navigate to scrumboard on CloseDetailView', function() {
-        spyOn(location, 'url');
-
-        scope.CloseDetailView();
-
-        expect(location.url).toHaveBeenCalledWith('/scrumboard');
-    });
-
-    describe('Delete Story', function () {
-        var expectedStory = {
-            Title: 'A Story'
-        };
+    describe('when closing detail view', function() {
         beforeEach(function() {
             spyOn(location, 'url');
-            spyOn(scrumboardService, 'deleteStory');
-            scope.Story = expectedStory;
-            scope.DeleteStory();
+
+            scope.CloseDetailView();
         });
-        
-        it('should navigate to scrumboard', function () {
-            expect(scrumboardService.deleteStory).toHaveBeenCalledWith(expectedStory);
-        });
-        
-        it('should navigate to scrumboard', function () {
+
+        it('should navigate to scrumboard', function() {
             expect(location.url).toHaveBeenCalledWith('/scrumboard');
         });
     });
-    it('navigate to scrumboard on CloseDetailView', function() {
-        spyOn(location, 'url');
 
-        scope.CloseDetailView();
+    describe('when deleting story', function () {
+        var expectedStory = {
+            Title: 'A Story'
+        };
+        
+        beforeEach(function() {
+            spyOn(location, 'url');
+            scrumboardService.deleteStory = jasmine.createSpy('deleteStory');
+            scope.Story = expectedStory;
+            scope.DeleteStory();
+        });
 
-        expect(location.url).toHaveBeenCalledWith('/scrumboard');
-    });
+        it('should navigate to scrumboard', function () {
+            expect(scrumboardService.deleteStory).toHaveBeenCalledWith(expectedStory);
+        });
+
+        it('should navigate to scrumboard', function () {
+            expect(location.url).toHaveBeenCalledWith('/scrumboard');
+        });
+    });    
 });
