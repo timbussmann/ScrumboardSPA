@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<project name="VS2012JavascriptProject" default="build" basedir=".">
+  <property name="nant.settings.currentframework" value="net-4.0"/>
+	<property name="project.name" value="VS2012JavascriptProject" />
+	<property name="project.dir" value=".." />
+	<property name="results.dir" value="../results" />
+	<property name="configuration" value="Release" />
+	<include buildfile="./nant-commons.build" />
+</project>
+ 

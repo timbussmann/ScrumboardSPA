@@ -1,0 +1,17 @@
+<project name="VS2012JavascriptProject-Commons" default="build" basedir=".">
+	<property name="ProgramFiles" value="${environment::get-variable('ProgramFiles')}"/>
+	<property name="windir" value="${environment::get-variable('windir')}"/>
+	<property name="chutzpah.console.exe" value="../packages/Chutzpah.2.4.1/tools/chutzpah.console.exe" /> 
+	<property name="NAntDirectory" value="../tools/NAnt" />
+	<!--
+    	The target executes all the Javascript Unittests against the compiled application.   
+  	-->
+	<target name="javascript-unit-tests" description="execute all javascript unit tests for the solution">
+		<tstamp />
+		<mkdir dir="${results.dir}" />
+		<exec program="${chutzpah.console.exe}" workingdir="${project.dir}" 
+			commandline="./ScrumboardSPA.Test/App/viewmodels"/>
+		<tstamp />
+	</target>
+		
+</project>
