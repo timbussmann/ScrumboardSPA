@@ -9,8 +9,6 @@
     using Data.Story;
     using Data.Story.State;
 
-    using Microsoft.AspNet.SignalR;
-
     using ScrumboardSPA.Sockets;
 
     public class StoryController : ApiController
