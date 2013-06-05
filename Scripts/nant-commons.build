@@ -3,9 +3,55 @@
 	<property name="windir" value="${environment::get-variable('windir')}"/>
 	<property name="chutzpah.console.exe" value="../packages/Chutzpah.2.4.1/tools/chutzpah.console.exe" /> 
 	<property name="NAntDirectory" value="../tools/NAnt" />
+	<property name="bin.dir" value="${project.dir}/bin/${configuration}" dynamic="true" />
+	<property name="nunit.exe" value="${project.dir}/packages/NUnit.Runners.2.6.2/tools/nunit-console.exe" />
+	<property name="scrumboardspa.nunit" value="bin/${configuration}/ScrumboardSPA.nunit" />
 	<!--
     	The target executes all the Javascript Unittests against the compiled application.   
   	-->
+		
+	<target name="clean-compile" description="call the clean goal of the MS solutions">
+		<echo message="Starting cleaning of solutions" />
+		<tstamp />
+		<delete>
+			<fileset basedir="${bin.dir}">
+				<include name="*.*" />
+			</fileset>
+		</delete>
+		
+		<echo message="Completion cleaning of solutions" />
+	</target>
+
+	<target name="rebuild-compile" description="compile the project with Rebuild">
+		<tstamp />
+		<property name="mode" value="Rebuild"/>
+		<call target="compile"/>
+	</target>
+	<!--
+    	The target compiles the project solution and all sub-solutions of the project using the MS build 
+    	tool.
+  	-->
+	<target name="compile" description="compile the solution">
+		<echo message="Starting compilation of solutions" />
+		<msbuild project = "${project.dir}/ScrumboardSPA.sln" target="${mode}">
+			<property name = "Configuration" value="${configuration}" />
+		</msbuild>
+		<echo message="Completed compilation of solutions" />
+	</target>
+	
+	<target name="unit-tests" description="execute all units test for the solution">
+		<tstamp />
+		<mkdir dir="${results.dir}" />
+		<exec program="${nunit.exe}" workingdir="${project.dir}/" 
+			commandline="ScrumboardSPA.Test/bin/${configuration}/ScrumboardSPA.Test.dll /xml:results/ScrumboardSPA.xml /exclude:RequiresExcel,RequiresImpersonation"/>
+		<nunit2report todir="${results.dir}" format="NoFrames" opendesc="true" >
+			<fileset>
+				<include name="${results.dir}/ScrumboardSPA.xml" />
+			</fileset>
+		</nunit2report>
+		<tstamp />
+	</target>	
+	
 	<target name="javascript-unit-tests" description="execute all javascript unit tests for the solution">
 		<tstamp />
 		<mkdir dir="${results.dir}" />
@@ -20,5 +66,4 @@
 			commandline="./ScrumboardSPA.Test/App/viewmodels /coverage"/>
 		<tstamp />
 	</target>
-		
 </project>

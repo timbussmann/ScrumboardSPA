@@ -6,5 +6,26 @@
 	<property name="results.dir" value="../results" />
 	<property name="configuration" value="Release" />
 	<include buildfile="./nant-commons.build" />
+	
+	<!-- The target is defined for integrators who wants to check the current trunk. The target compiles the project and 
+    runs all unit-tests against the compiled solution. -->
+	<target name="integration-build" description="build a version for the developer and run all unit tests for testing before check-in in subversion">
+		<property name="configuration" value="Release" />
+		<call target="internal-build" />
+	</target>
+	
+	<target name="internal-build" 
+		description="build a version for the developer and run all unit testsfor testing before check-in in subversion" 
+		depends="clean, clean-compile, rebuild-compile" />
+	
+	<target name="clean" description="empty the result folder">
+		<mkdir dir="${results.dir}" />
+		<delete>
+			<fileset basedir="${results.dir}">
+				<include name="*.xml" />
+				<include name="*.html" />
+			</fileset>
+		</delete>
+	</target>
 </project>
  
