@@ -10,7 +10,14 @@
 		<tstamp />
 		<mkdir dir="${results.dir}" />
 		<exec program="${chutzpah.console.exe}" workingdir="${project.dir}" 
-			commandline="./ScrumboardSPA.Test/App/viewmodels"/>
+			commandline="./ScrumboardSPA.Test/App/viewmodels /debug"/>
+		<tstamp />
+	</target>
+	<target name="javascript-code-coverage" description="execute all javascript unit tests for the solution">
+		<tstamp />
+		<mkdir dir="${results.dir}" />
+		<exec program="${chutzpah.console.exe}" workingdir="${project.dir}" 
+			commandline="./ScrumboardSPA.Test/App/viewmodels /coverage"/>
 		<tstamp />
 	</target>
 		
