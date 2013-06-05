@@ -23,6 +23,12 @@
                 });
             };
             
+            hub.client.updateOnlineUsers = function (usersCount) {
+                $rootScope.$apply(function() {
+                    $rootScope.$broadcast('OnlineUsersUpdatedSuccessful', usersCount);
+                });
+            };
+
             // Start the connection
             $.connection.hub.start();
         }

@@ -8,7 +8,7 @@
         @Scripts.Render("~/bundles/modernizr")
     </head>
     <body data-ng-app="appModule">
-        <div class="navbar navbar-static-top">
+        <div class="navbar navbar-static-top" data-ng-controller="menuViewModel">
             <div class="navbar-inner">
                 <div class="container">
                     @*<a class="brand" href="#">SPA board - steaming Scrum</a>*@
@@ -16,6 +16,7 @@
                         <li><a href="/scrumboard">Board</a></li>
                         <li><a href="/story/new">Create Story</a></li>
                     </ul>
+                    <p class="navbar-text text-right">Users online:{{OnlineUsers}}</p>
                 </div>
             </div>
         </div>
