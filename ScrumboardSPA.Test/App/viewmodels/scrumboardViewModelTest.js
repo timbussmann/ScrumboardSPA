@@ -20,7 +20,8 @@ describe('Scrumboard Viewmodel', function () {
         setStoryState: function(storyId, newState, successCallback, errorCallback) {
             this.setStoryStateSuccessCallback = successCallback;
             this.setStoryStateErrorCallback = errorCallback;
-        }
+        },
+        deleteStory: function() {}
     };
 
     var location = {
@@ -194,6 +195,19 @@ describe('Scrumboard Viewmodel', function () {
 
             it('should notify creation', function () {
                 expect(notificationService.notifySuccess).toHaveBeenCalledWith(newStory.Title + ' - <a href="/story/' + newStory.Id + '">[click to see story]</a>', 'New Story created');
+            });
+        });
+
+        describe('when story has been moved to trash', function() {
+            var story = { Id: 1 };
+            beforeEach(function () {
+                spyOn(scrumboardService, 'deleteStory');
+
+                scope.DeleteStory(story);
+            });
+
+            it('should call delete on scrumboardService', function() {
+                expect(scrumboardService.deleteStory).toHaveBeenCalled();
             });
         });
 

@@ -55,7 +55,7 @@ describe('Story Detail Viewmodel', function () {
             scope.DeleteStory();
         });
 
-        it('should navigate to scrumboard', function () {
+        it('should call deleteStory on ScrumboardService', function () {
             expect(scrumboardService.deleteStory).toHaveBeenCalledWith(expectedStory);
         });
 

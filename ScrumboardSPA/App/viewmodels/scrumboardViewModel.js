@@ -12,6 +12,10 @@
             $scope.ShowStoryDetail = function(storyId) {
                 $location.url('/story/' + storyId);
             };
+            
+            $scope.DeleteStory = function (story) {
+                scrumboardService.deleteStory(story);
+            };
 
             $scope.UpdateStoryState = function (story, newState) {
                 // don't update story if the state hasn't changed.

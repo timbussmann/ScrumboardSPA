@@ -21,3 +21,14 @@
 #scrumboard .story:hover {
     background-color: rgba(144, 238, 144, 1.0);
 }
+
+#scrumboard .trash {
+    position: absolute;
+    right: 10px;
+    top: 45px;
+    float: right;
+    width: 95px;
+    height: 95px;
+    background:url(images/trashcan.jpg);
+    background-size:95px 95px;
+}
