@@ -50,7 +50,7 @@ app.directive('dropzone', function () {
         }, false);
         
         element.addEventListener('drop', function(e) {
-            var rawData = e.dataTransfer.getData('application/json');
+            var rawData = e.dataTransfer.getData('text');
             var transferData = JSON.parse(rawData);
             scope[attrs['dropzone']](transferData, scope[attrs['dropzoneParameter']]);
         }, false);
@@ -67,7 +67,7 @@ app.directive('dropData', function() {
         element.addEventListener('dragstart', function(e) {
             //e.dataTransfer.effectAllowed = 'move';
             var transferData = JSON.stringify(scope[attrs['dropData']]);
-            e.dataTransfer.setData('application/json', transferData);
+            e.dataTransfer.setData('text', transferData);
         });
     };
 });
