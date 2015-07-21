@@ -27,10 +27,11 @@
                 .Include("~/Scripts/toastr.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angularJs")
-                .Include("~/Scripts/angular.js"));
+                .Include("~/Scripts/angular.js")
+                .Include("~/Scripts/angular-route.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/signalR")
-                .Include("~/Scripts/jquery.signalR-1.0.1.js"));
+                .Include("~/Scripts/jquery.signalR-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app")
                 .Include("~/App/appModule.js")

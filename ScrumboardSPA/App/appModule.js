@@ -1,4 +1,4 @@
-﻿var app = angular.module('appModule', [], function ($routeProvider, $locationProvider) {
+﻿var app = angular.module('appModule', ['ngRoute'], function ($routeProvider, $locationProvider) {
     
     $routeProvider.when('/scrumboard', {
         templateUrl: '/views/ScrumboardView',
