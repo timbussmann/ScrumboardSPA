@@ -1,16 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrumboardSPA", "ScrumboardSPA\ScrumboardSPA.csproj", "{B25E9F98-DACD-4255-ADB3-BD91E8E09A68}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrumboardSPA.Test", "ScrumboardSPA.Test\ScrumboardSPA.Test.csproj", "{ED084747-616A-4828-901D-B73D5E6845C9}"
-EndProject
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0FA662E7-CB86-48D3-B693-A109699CD41E}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrumboardSPA", "ScrumboardSPA\ScrumboardSPA.csproj", "{B25E9F98-DACD-4255-ADB3-BD91E8E09A68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrumboardSPA.Test", "ScrumboardSPA.Test\ScrumboardSPA.Test.csproj", "{ED084747-616A-4828-901D-B73D5E6845C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrumboardSPA.Data", "ScrumboardSPA.Data\ScrumboardSPA.Data.csproj", "{CE1EA092-E723-482F-834C-534D9902D073}"
 EndProject
