@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Model;
+    using State;
 
     public class StoryRepository : IStoryRepository
     {
@@ -70,6 +71,46 @@
             {
                 return userStories.Any() ? userStories.Max(s => s.Id) + 1 : 1;
             }
+        }
+
+        public void Initialize()
+        {
+            this.AddNewStory(new NewUserStory()
+            {
+                Title = "Drag and drop",
+                Description =
+                                         "As a user I want to be able to drag and drop user stories on the board.",
+                StackRank = 990,
+                State = StoryState.Done,
+                StoryPoints = 5
+            });
+            this.AddNewStory(new NewUserStory()
+            {
+                Title = "SignalR support",
+                Description =
+                                         "As a user I want to be notified when another team member changes the state of a story on the board.",
+                StackRank = 950,
+                State = StoryState.WorkInProgress,
+                StoryPoints = 8
+            });
+            this.AddNewStory(new NewUserStory()
+            {
+                Title = "Show Scrum board in offline mode",
+                Description =
+                                         "As a user I want to see the scrumboard even when I am offline",
+                StackRank = 940,
+                State = StoryState.SprintBacklog,
+                StoryPoints = 3
+            });
+            this.AddNewStory(new NewUserStory()
+            {
+                Title = "Move Stories in offline mode",
+                Description =
+                                         "As a user I want to move stories when I am offline and get them synced when connection is reestablished.",
+                StackRank = 920,
+                State = StoryState.SprintBacklog,
+                StoryPoints = 8
+            });
         }
     }
 }
