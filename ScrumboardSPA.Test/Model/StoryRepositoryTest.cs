@@ -34,7 +34,8 @@
 
             UserStory result = this.testee.AddNewStory(newUserStory);
 
-            result.ShouldHave().SharedProperties().EqualTo(newUserStory);
+            result.ShouldBeEquivalentTo(newUserStory, config => config
+                .Excluding(s => s.Etag).Excluding(s => s.Id));
             result.Id.Should().Be(1, "because ids should start at 1");
         }
 
@@ -121,8 +122,8 @@
             Action action = () => this.testee.UpdateStory(createdStory);
 
             var expection = action.ShouldThrow<RepositoryConcurrencyException>();
-            expection.And.Requested.ShouldHave().AllProperties().EqualTo(createdStory);
-            expection.And.Original.ShouldHave().AllProperties().EqualTo(updatedStory);
+            expection.And.Requested.ShouldBeEquivalentTo(createdStory);
+            expection.And.Original.ShouldBeEquivalentTo(updatedStory);
         }
 
         [Test]
@@ -145,7 +146,7 @@
 
             UserStory result = this.testee.GetStory(createdStory.Id);
 
-            result.ShouldHave().AllProperties().EqualTo(createdStory);
+            result.ShouldBeEquivalentTo(createdStory);
         }
 
         [Test]
