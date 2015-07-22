@@ -61,8 +61,7 @@
                 
                 // only update story if we have an older version
                 if (originalStory.Etag !== changedStory.Etag) {
-                    var storyIndex = _.indexOf($scope.Stories, originalStory);
-                    $scope.Stories[storyIndex] = changedStory;
+                    angular.copy(changedStory, originalStory);
                     notificationService.notifySuccess('Updated story #' + changedStory.Id);
                 }
             });

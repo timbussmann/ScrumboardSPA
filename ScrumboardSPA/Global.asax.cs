@@ -24,12 +24,6 @@
 
             // Serialize Enum values not as int values but to their name:
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter());
-
-            // Configure SignalR serialization.
-             var settings = new JsonSerializerSettings
-            {
-                Converters = { new StringEnumConverter() }
-            };
         }
     }
 }
