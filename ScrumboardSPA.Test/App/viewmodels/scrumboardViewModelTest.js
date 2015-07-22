@@ -107,24 +107,23 @@ describe('Scrumboard Viewmodel', function () {
         });
 
         describe('on story changed event', function () {
-            var oldStory = { Id: 1, Title: 'old', Etag: 1 };
-            var newStory = { Id: 1, Title: 'new', State: 'To Verify', Etag: 2 };
+            var oldStory = { Id: 1, Title: 'old', State: 'Ready', Etag: 1 };
+            var newStory = { Id: 1, Title: 'new', State: 'To Verify',  Etag: 2 };
             beforeEach(function () {
                 spyOn(scrumboardService, 'getStory').and.callFake(function (id, callback) {
                     callback(newStory);
                 });
-
                 scope.Stories = [oldStory];
 
                 scope.$broadcast('StoryChanged', newStory);
             });
 
-            it('should update story', function () {
-                expect(scope.Stories[0]).toBe(newStory);
+            it('should update properties', function () {
+                expect(scope.Stories[0]).toEqual(newStory);
             });
 
             it('should notify success', function () {
-                expect(notificationService.notifySuccess).toHaveBeenCalledWith('Updated story #' + newStory.Id);
+                expect(notificationService.notifySuccess).toHaveBeenCalledWith("Updated story #" + newStory.Id);
             });
         });
 
