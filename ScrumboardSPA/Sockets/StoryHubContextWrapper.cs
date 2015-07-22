@@ -1,8 +1,7 @@
 ﻿namespace ScrumboardSPA.Sockets
 {
+    using Data.Story;
     using Microsoft.AspNet.SignalR;
-
-    using ScrumboardSPA.Data.Story;
 
     class StoryHubContextWrapper : IStoryHubContextWrapper
     {

@@ -1,18 +1,20 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(ScrumboardSPA.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(ScrumboardSPA.App_Start.NinjectWebCommon), "Stop")]
+using ScrumboardSPA.App_Start;
+using WebActivator;
+
+[assembly: PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
+[assembly: ApplicationShutdownMethod(typeof(NinjectWebCommon), "Stop")]
 
 namespace ScrumboardSPA.App_Start
 {
     using System;
     using System.Web;
     using System.Web.Http;
+    using Data.Story;
+    using Data.Story.State;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
     using Ninject;
     using Ninject.Web.Common;
-    using ScrumboardSPA.Data.Story;
-    using ScrumboardSPA.Data.Story.State;
-    using ScrumboardSPA.Sockets;
+    using Sockets;
 
     public static class NinjectWebCommon 
     {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ScrumboardSPA.Data.Story.State
+﻿namespace ScrumboardSPA.Data.Story.State
 {
     public class StateDetail
     {

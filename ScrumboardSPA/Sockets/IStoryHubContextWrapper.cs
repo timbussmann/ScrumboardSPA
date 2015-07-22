@@ -1,6 +1,6 @@
 ﻿namespace ScrumboardSPA.Sockets
 {
-    using ScrumboardSPA.Data.Story;
+    using Data.Story;
 
     /// <summary>
     /// The StoryHubService interface.

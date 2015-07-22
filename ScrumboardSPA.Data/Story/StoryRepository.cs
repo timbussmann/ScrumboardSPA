@@ -1,10 +1,8 @@
 ﻿namespace ScrumboardSPA.Data.Story
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Model;
-    using ScrumboardSPA.Data.Story.State;
 
     public class StoryRepository : IStoryRepository
     {

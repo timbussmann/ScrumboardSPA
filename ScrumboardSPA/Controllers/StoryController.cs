@@ -3,13 +3,11 @@
     using System;
     using System.Linq;
     using System.Net;
-    using System.Net.Http;
     using System.Web.Http;
     using Data.Model;
     using Data.Story;
     using Data.Story.State;
-
-    using ScrumboardSPA.Sockets;
+    using Sockets;
 
     public class StoryController : ApiController
     {
@@ -38,17 +36,17 @@
 
         [HttpPut]
         [ActionName("state")]
-        public HttpResponseMessage SetState(int id, SetStoryStateCommand updateCommand)
+        public IHttpActionResult SetState(int id, SetStoryStateCommand updateCommand)
         {
             if (updateCommand == null || updateCommand.Etag == Guid.Empty)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return this.BadRequest();
             }
 
             UserStory story = this.storyRepository.GetStory(id);
             if (story == null)
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                return this.NotFound();
             }
 
             try
@@ -57,21 +55,21 @@
                 story.Etag = updateCommand.Etag;
                 UserStory updatedStory = this.storyRepository.UpdateStory(story);
                 this.storyHubService.UpdateStory(updatedStory);
-                return this.Request.CreateResponse(HttpStatusCode.OK);
+                return this.Ok();
             }
-            catch (RepositoryConcurrencyException ex)
+            catch (RepositoryConcurrencyException)
             {
-                return Request.CreateResponse(HttpStatusCode.Conflict,
-                                              new ConcurrencyErrorModel() { Original = ex.Original, Requested = ex.Requested});
+                return this.Conflict();
             }
         }
 
         [HttpPost]
-        public HttpResponseMessage CreateStory(CreateUserStoryModel newStory)
+        public IHttpActionResult CreateStory(CreateUserStoryModel newStory)
         {
+            
             if (newStory == null || string.IsNullOrWhiteSpace(newStory.Title))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Story title is required");
+                return this.BadRequest("Story title is required");
             }
 
             var story = new NewUserStory
@@ -85,7 +83,7 @@
 
             UserStory createdStory = this.storyRepository.AddNewStory(story);
             this.storyHubService.CreateStory(createdStory);
-            return Request.CreateResponse(HttpStatusCode.Created);
+            return this.Created(string.Empty, createdStory);
         }
 
         /// <summary>
@@ -95,15 +93,15 @@
         /// <returns></returns>
         [HttpDelete]
         [ActionName("delete")]
-        public HttpResponseMessage DeleteStory(int id)
+        public IHttpActionResult DeleteStory(int id)
         {
             if (this.storyRepository.DeleteStory(id))
             {
                 this.storyHubService.DeleteStory(id);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return this.StatusCode(HttpStatusCode.NoContent);
             }
 
-            return Request.CreateResponse(HttpStatusCode.NotFound);
+            return this.NotFound();
         }
     }
 

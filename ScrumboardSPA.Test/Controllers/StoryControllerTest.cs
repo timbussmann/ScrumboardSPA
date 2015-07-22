@@ -1,11 +1,10 @@
 ﻿namespace ScrumboardSPA.Test.Controllers
 {
+    using System;
+    using System.Collections.Generic;
     using System.Net;
-    using System.Net.Http;
     using System.Web.Http;
-    using System.Web.Http.Controllers;
-    using System.Web.Http.Hosting;
-    using System.Web.Http.Routing;
+    using System.Web.Http.Results;
     using Data.Model;
     using Data.Story;
     using Data.Story.State;
@@ -13,8 +12,6 @@
     using FluentAssertions;
     using NUnit.Framework;
     using ScrumboardSPA.Controllers;
-    using System;
-    using System.Collections.Generic;
     using Sockets;
 
     [TestFixture]
@@ -33,8 +30,6 @@
             this.storyHubService = A.Fake<IStoryHubContextWrapper>();
 
             this.testee = new StoryController(this.storyRepository, this.storyHubService);
-
-            SetupControllerForTests(testee);
         }
 
         [Test]
@@ -71,14 +66,14 @@
             const int UpdatedStoryId = 99;
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
 
-            HttpResponseMessage result = this.testee.SetState(42,
+            IHttpActionResult result = this.testee.SetState(42,
                                                               new SetStoryStateCommand
                                                                   {
                                                                       State = StoryState.WorkInProgress,
                                                                       Etag = Guid.NewGuid()
                                                                   });
 
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Should().BeOfType<OkResult>();
         }
 
         [Test]
@@ -87,7 +82,7 @@
             const int UpdatedStoryId = 99;
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Returns(new UserStory(UpdatedStoryId));
 
-            HttpResponseMessage result = this.testee.SetState(42,
+            IHttpActionResult result = this.testee.SetState(42,
                                                               new SetStoryStateCommand
                                                                   {
                                                                       State = StoryState.WorkInProgress,
@@ -102,56 +97,53 @@
         {
             A.CallTo(() => this.storyRepository.GetStory(A<int>._)).Returns(null);
 
-            HttpResponseMessage result = this.testee.SetState(22,
+            IHttpActionResult result = this.testee.SetState(22,
                                                               new SetStoryStateCommand
                                                                   {
                                                                       State = StoryState.WorkInProgress,
                                                                       Etag = Guid.NewGuid()
                                                                   });
 
-            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            result.Should().BeOfType<NotFoundResult>();
         }
 
         [Test]
-        public void SetState_WhenConcurrencyException_ThenReturnHttpStatusCodeConflictWithBothStoriesAttached()
+        public void SetState_WhenConcurrencyException_ThenReturnHttpStatusCodeConflict()
         {
             UserStory original = new UserStory(44);
             UserStory requested = new UserStory(55);
             A.CallTo(() => this.storyRepository.UpdateStory(A<UserStory>._)).Throws(
                 new RepositoryConcurrencyException(original, requested));
 
-            HttpResponseMessage result = this.testee.SetState(22,
+            IHttpActionResult result = this.testee.SetState(22,
                                                               new SetStoryStateCommand
                                                                   {
                                                                       State = StoryState.WorkInProgress,
                                                                       Etag = Guid.NewGuid()
                                                                   });
 
-            result.StatusCode.Should().Be(HttpStatusCode.Conflict);
-            var content = result.Content.As<ObjectContent>().Value.As<ConcurrencyErrorModel>();
-            content.Original.As<UserStory>().Should().Be(original);
-            content.Requested.Should().Be(requested);
+            result.Should().BeOfType<ConflictResult>();
         }
 
         [Test]
         public void SetState_WhenEmtpyGuidProvided_ThenReturnValidationError()
         {
-            HttpResponseMessage result = this.testee.SetState(22,
+            IHttpActionResult result = this.testee.SetState(22,
                                                               new SetStoryStateCommand
                                                                   {
                                                                       State = StoryState.WorkInProgress,
                                                                       Etag = Guid.Empty
                                                                   });
 
-            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            result.Should().BeOfType<BadRequestResult>();
         }
 
         [Test]
         public void SetState_WhenInvalidRequestData_ThenReturnBadRequestCode()
         {
-            HttpResponseMessage result = this.testee.SetState(22, null);
+            IHttpActionResult result = this.testee.SetState(22, null);
 
-            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            result.Should().BeOfType<BadRequestResult>();
         }
 
         [Test]
@@ -160,21 +152,17 @@
             UserStory expectedUserStory = new UserStory(13);
             A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).Returns(expectedUserStory);
 
-            HttpResponseMessage result = this.testee.CreateStory(new CreateUserStoryModel()
-                                                                     {
-                                                                         Title = "A sample title"
-                                                                     });
+            IHttpActionResult result = this.testee.CreateStory(new CreateUserStoryModel { Title = "A sample title" });
 
-            result.StatusCode.Should().Be(HttpStatusCode.Created);
+            result.Should().BeOfType<CreatedNegotiatedContentResult<UserStory>>();
         }
 
         [Test]
         public void CreateStory_WhenNoTitleProvided_ThenDoNotCreateStoryAndReturnError()
         {
-            HttpResponseMessage result = this.testee.CreateStory(new CreateUserStoryModel());
+            IHttpActionResult result = this.testee.CreateStory(new CreateUserStoryModel());
 
-            result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-           
+            result.Should().BeOfType<BadRequestErrorMessageResult>();
             A.CallTo(() => this.storyRepository.AddNewStory(A<NewUserStory>._)).MustNotHaveHappened();
         }
 
@@ -189,7 +177,8 @@
             var result = this.testee.DeleteStory(StoryId);
 
             // Assert
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Should().BeOfType<StatusCodeResult>()
+                .Which.StatusCode.Should().Be(HttpStatusCode.NoContent);
         } 
 
         [Test]
@@ -200,30 +189,16 @@
             A.CallTo(() => this.storyRepository.DeleteStory(A<int>.That.Matches(i => i == StoryId))).Returns(false);
 
             // Act
-            var result = this.testee.DeleteStory(StoryId);
+            IHttpActionResult result = this.testee.DeleteStory(StoryId);
 
             // Assert
-            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            result.Should().BeOfType<NotFoundResult>();
         } 
 
         private IEnumerable<UserStory> SetupStories(IEnumerable<UserStory> stories)
         {
             A.CallTo(() => this.storyRepository.GetAllStories()).Returns(stories);
             return stories;
-        }
-
-        private static void SetupControllerForTests(ApiController controller)
-        {
-            // see: http://www.peterprovost.org/blog/2012/06/16/unit-testing-asp-dot-net-web-api/
-
-            var config = new HttpConfiguration();
-            var request = new HttpRequestMessage(HttpMethod.Put, "http://localhost/api/story");
-            var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}");
-            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary { { "controller", "story" } });
-
-            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
-            controller.Request = request;
-            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
         }
     }
 }
