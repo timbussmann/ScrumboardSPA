@@ -1,8 +1,10 @@
 ﻿/// <reference path="../../scripts/jasmine.js" />
 /// <reference path="../../scripts/angular.js" />
+/// <reference path="../../scripts/angular-route.js" />
 /// <reference path="../../scripts/angular-mocks.js" />
 /// <reference path="../../../scrumboardspa/app/appmodule.js" />
 /// <reference path="../../../scrumboardspa/app/viewmodels/storydetailviewmodel.js" />
+
 describe('Story Detail Viewmodel', function () {
     var StoryId = 42;
     var scope;
@@ -19,7 +21,7 @@ describe('Story Detail Viewmodel', function () {
     };
 
     beforeEach(function () {
-        module('appModule');
+        module('appModule', 'ngRoute');
         inject(function ($rootScope, $controller) {
             scope = $rootScope.$new();
             $controller('storyDetailViewModel', {

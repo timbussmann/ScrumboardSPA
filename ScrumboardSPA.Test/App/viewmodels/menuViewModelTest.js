@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../scripts/jasmine.js" />
 /// <reference path="../../scripts/angular.js" />
+/// <reference path="../../scripts/angular-route.js" />
 /// <reference path="../../scripts/angular-mocks.js" />
 /// <reference path="../../../scrumboardspa/app/appmodule.js" />
 /// <reference path="../../../scrumboardspa/app/viewmodels/menuviewmodel.js" />
@@ -7,7 +8,7 @@ describe('Menu Viewmodel', function () {
     var scope;
 
     beforeEach(function () {
-        module('appModule');
+        module('appModule', 'ngRoute');
         inject(function ($rootScope, $controller) {
             scope = $rootScope.$new();
             $controller('menuViewModel', {

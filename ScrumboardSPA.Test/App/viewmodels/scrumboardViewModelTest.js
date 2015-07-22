@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../scripts/jasmine.js" />
 /// <reference path="../../scripts/angular.js" />
+/// <reference path="../../scripts/angular-route.js" />
 /// <reference path="../../scripts/angular-mocks.js" />
 /// <reference path="../../../scrumboardspa/app/appmodule.js" />
 /// <reference path="../../../scrumboardspa/scripts/underscore.js" />
@@ -53,7 +54,7 @@ describe('Scrumboard Viewmodel', function () {
     }
 
     beforeEach(function() {
-        module('appModule');
+        module('appModule', 'ngRoute');
         
         spyOn(notificationService, 'notifySuccess');
         spyOn(notificationService, 'notifyInfo');
@@ -66,10 +67,10 @@ describe('Scrumboard Viewmodel', function () {
         var stories = ['story1', 'story2', 'story3'];
         
         beforeEach(function () {
-            spyOn(scrumboardService, 'getStates').andCallFake(function(callback) {
+            spyOn(scrumboardService, 'getStates').and.callFake(function(callback) {
                 callback(states);
             });
-            spyOn(scrumboardService, 'getStories').andCallFake(function(callback) {
+            spyOn(scrumboardService, 'getStories').and.callFake(function(callback) {
                 callback(stories);
             });
             
@@ -109,7 +110,7 @@ describe('Scrumboard Viewmodel', function () {
             var oldStory = { Id: 1, Title: 'old', Etag: 1 };
             var newStory = { Id: 1, Title: 'new', State: 'To Verify', Etag: 2 };
             beforeEach(function () {
-                spyOn(scrumboardService, 'getStory').andCallFake(function (id, callback) {
+                spyOn(scrumboardService, 'getStory').and.callFake(function (id, callback) {
                     callback(newStory);
                 });
 
@@ -180,14 +181,13 @@ describe('Scrumboard Viewmodel', function () {
         describe('on new story event', function () {
             var newStory = { Id: 1, Title: 'new', State: 'To Verify' };
             beforeEach(function () {
-                spyOn(scrumboardService, 'getStory').andCallFake(function (id, callback) {
+                spyOn(scrumboardService, 'getStory').and.callFake(function (id, callback) {
                     callback(newStory);
                 });
                 scope.Stories = [];
 
                 scope.$broadcast('CreateSuccessful', newStory);
             });
-
 
             it('should create story', function () {
                 expect(scope.Stories[0]).toBe(newStory);
@@ -218,7 +218,7 @@ describe('Scrumboard Viewmodel', function () {
             };
 
             beforeEach(function () {
-                conflictService.addConflict = jasmine.createSpy('addConflict').andReturn(42);
+                conflictService.addConflict = jasmine.createSpy('addConflict').and.returnValue(42);
 
                 rootScope.$broadcast('UpdateConflicted', conflict);
             });

@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../scripts/jasmine.js" />
 /// <reference path="../../scripts/angular.js" />
+/// <reference path="../../scripts/angular-route.js" />
 /// <reference path="../../scripts/angular-mocks.js" />
 /// <reference path="../../../scrumboardspa/scripts/underscore.js" />
 /// <reference path="../../../scrumboardspa/app/appmodule.js" />
@@ -30,7 +31,7 @@ describe('resolve conflict Viewmodel', function() {
         location.url = jasmine.createSpy('url');
         notificationService.notifyWarning = jasmine.createSpy('notifyWarning');
 
-        module('appModule');
+        module('appModule', 'ngRoute');
     });
 
     describe('on initialization', function() {
@@ -111,9 +112,8 @@ describe('resolve conflict Viewmodel', function() {
                 scope.TakeOriginal();
             });
 
-            it('should publish StoryChanged event with original version', function() {
-                expect(scope.$broadcast.mostRecentCall.args[0]).toBe('StoryChanged');
-                expect(scope.$broadcast.mostRecentCall.args[1]).toEqual(conflict.original);             
+            it('should publish StoryChanged event with original version', function () {
+                expect(scope.$broadcast).toHaveBeenCalledWith('StoryChanged', conflict.original);
             });
 
             it('should mark the conflict as resolved', function() {
@@ -138,8 +138,7 @@ describe('resolve conflict Viewmodel', function() {
             });
             
             it('should publish StoryChanged event with requested version', function () {
-                expect(scope.$broadcast.mostRecentCall.args[0]).toBe('StoryChanged');
-                expect(scope.$broadcast.mostRecentCall.args[1]).toEqual(conflict.requested);
+                expect(scope.$broadcast).toHaveBeenCalledWith('StoryChanged', conflict.requested);
             });
             
             it('should mark the conflict as resolved', function () {

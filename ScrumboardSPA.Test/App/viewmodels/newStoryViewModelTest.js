@@ -1,8 +1,10 @@
 ﻿/// <reference path="../../scripts/jasmine.js" />
 /// <reference path="../../scripts/angular.js" />
+/// <reference path="../../scripts/angular-route.js" />
 /// <reference path="../../scripts/angular-mocks.js" />
 /// <reference path="../../../scrumboardspa/app/appmodule.js" />
 /// <reference path="../../../scrumboardspa/app/viewmodels/newstoryviewmodel.js" />
+
 describe('new Story Viewmodel', function () {
     var scope;
     var scrumboardService = {
@@ -22,7 +24,7 @@ describe('new Story Viewmodel', function () {
     };
 
     beforeEach(function () {
-        module('appModule');
+        module('appModule', 'ngRoute');
         inject(function ($rootScope, $controller) {
             scope = $rootScope.$new();
             $controller('newStoryViewModel', {
@@ -50,7 +52,7 @@ describe('new Story Viewmodel', function () {
         });
 
         it('should not create a story', function() {
-            expect(scrumboardService.createStory).wasNotCalled();
+            expect(scrumboardService.createStory).not.toHaveBeenCalled();
         });
     });
 
