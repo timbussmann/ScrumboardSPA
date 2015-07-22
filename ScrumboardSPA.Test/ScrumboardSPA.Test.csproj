@@ -59,7 +59,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App\JasmineTemplate.html" />
     <Content Include="App\viewmodels\menuViewModelTest.js" />
     <Content Include="App\viewmodels\newStoryViewModelTest.js" />
     <Content Include="App\viewmodels\resolveConflictViewModelTest.js" />
